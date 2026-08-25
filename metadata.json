@@ -1,0 +1,6 @@
+{
+  "name": "SpendWise",
+  "description": "An Expense Tracker with Budget Goals and Glassmorphism design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
