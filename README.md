@@ -14,7 +14,7 @@ Click below to download the latest SpendWise APK directly to your Android device
 
 [![Download APK](https://img.shields.io/badge/⬇️%20DOWNLOAD%20APP%20APK-DIRECT%20INSTALL-10B981?style=for-the-badge&labelColor=064E3B&logo=android&logoColor=white)](https://drive.usercontent.google.com/download?id=191f8uwKxBhJ180j6BYswhaPErgwwJcM5&export=download&confirm=t)
 
-*(Alternative Mirror Link: [Open on Google Drive](https://drive.google.com/file/d/191f8uwKxBhJ180j6BYswhaPErgwwJcM5/view?usp=sharing))*
+*(Alternative Mirror Link: [Open on Google Drive](https://drive.usercontent.google.com/download?id=1PqOn_OHr2O9anTuUDM2Lkow3bGtY8yjN&export=download&confirm=t))*
 
 ---
 
@@ -63,7 +63,7 @@ Click below to download the latest SpendWise APK directly to your Android device
 
 ## 📲 How to Install
 
-1. Click on the **[Download App APK](https://drive.usercontent.google.com/download?id=191f8uwKxBhJ180j6BYswhaPErgwwJcM5&export=download&confirm=t)** button above.
+1. Click on the **[Download App APK](https://drive.usercontent.google.com/download?id=1PqOn_OHr2O9anTuUDM2Lkow3bGtY8yjN&export=download&confirm=t)** button above.
 2. Once the file finishes downloading, tap to open the `.apk` package.
 3. If prompted by Android, enable **"Install from unknown sources"** for your browser.
 4. Open **SpendWise** and enjoy tracking your finances!
@@ -72,6 +72,8 @@ Click below to download the latest SpendWise APK directly to your Android device
 
 <div align="center">
 
-Crafted with 💚 for modern Android devices.
+Created by Rutvik with love and AI ❤️✨
+
+Crafted for modern Android devices.
 
 </div>
