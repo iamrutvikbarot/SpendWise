@@ -57,6 +57,21 @@ android {
     compose = true
     buildConfig = true
   }
+  packaging {
+    resources {
+      excludes += setOf(
+        "/META-INF/DEPENDENCIES",
+        "/META-INF/LICENSE",
+        "/META-INF/LICENSE.txt",
+        "/META-INF/license.txt",
+        "/META-INF/NOTICE",
+        "/META-INF/NOTICE.txt",
+        "/META-INF/notice.txt",
+        "/META-INF/ASL2.0",
+        "/META-INF/*.kotlin_module"
+      )
+    }
+  }
   testOptions { unitTests { isIncludeAndroidResources = true } }
   dependenciesInfo {
     includeInApk = false
@@ -116,6 +131,12 @@ dependencies {
   // implementation(libs.androidx.credentials)
   // implementation(libs.androidx.credentials.play.services)
   // implementation(libs.googleid)
+  // Google Sign-In and Drive APIs
+  implementation("com.google.android.gms:play-services-auth:21.0.0")
+  implementation("com.google.api-client:google-api-client-android:2.2.0")
+  implementation("com.google.apis:google-api-services-drive:v3-rev20230822-2.0.0")
+  implementation("com.google.http-client:google-http-client-gson:1.43.3")
+
   implementation(libs.firebase.appcheck.recaptcha)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)

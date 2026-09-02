@@ -1,15 +1,14 @@
 package com.example.ui.auth
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material3.*
@@ -20,29 +19,44 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.components.GlassTextField
+import com.example.BuildConfig
 import com.example.ui.components.GradientButton
 import com.example.ui.theme.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel,
-    onLoginSuccess: () -> Unit,
-    onNavigateRegister: () -> Unit
+    onLoginSuccess: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var pin by remember { mutableStateOf("") }
-    
+    val context = LocalContext.current
     val authState by viewModel.authState.collectAsState()
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             onLoginSuccess()
             viewModel.resetState()
+        }
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            if (account != null) {
+                viewModel.loginWithGoogle(account)
+            }
+        } catch (e: ApiException) {
+            viewModel.setError("Google sign in failed")
         }
     }
 
@@ -136,45 +150,10 @@ fun LoginScreen(
                 )
             }
             Text(
-                text = "Welcome back to your financial vault",
+                text = "Welcome to your financial vault",
                 fontSize = 13.sp,
                 color = TextSecondary,
                 modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
-            )
-
-            GlassTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = "Email Address",
-                placeholder = "name@example.com",
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        tint = TextTertiary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            GlassTextField(
-                value = pin,
-                onValueChange = { if (it.length <= 4 && it.all { char -> char.isDigit() }) pin = it },
-                label = "4-Digit Security PIN",
-                placeholder = "••••",
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = TextTertiary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                isPassword = true
             )
 
             if (authState is AuthState.Error) {
@@ -190,26 +169,23 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             GradientButton(
-                text = if (authState is AuthState.Loading) "Authenticating..." else "Unlock Vault",
-                onClick = { viewModel.login(email, pin) },
-                enabled = authState !is AuthState.Loading && email.isNotBlank() && pin.length == 4
+                text = if (authState is AuthState.Loading) "Authenticating..." else "Sign in with Google",
+                onClick = {
+                    val gsoBuilder = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestProfile()
+                        .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
+                        
+                    // Only request ID token if we have a valid non-placeholder client ID
+                    if (BuildConfig.GOOGLE_CLIENT_ID != "your_google_client_id_here") {
+                        gsoBuilder.requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+                    }
+
+                    val googleSignInClient = GoogleSignIn.getClient(context, gsoBuilder.build())
+                    launcher.launch(googleSignInClient.signInIntent)
+                },
+                enabled = authState !is AuthState.Loading
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text("New to SpendWise? ", color = TextSecondary, fontSize = 13.sp)
-                Text(
-                    text = "Create Account",
-                    color = PrimaryEmerald,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onNavigateRegister() }
-                )
-            }
         }
     }
 }

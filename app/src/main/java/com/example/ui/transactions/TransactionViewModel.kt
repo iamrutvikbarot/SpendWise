@@ -10,7 +10,8 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository,
-    private val dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager,
+    private val driveBackupManager: com.example.data.remote.DriveBackupManager
 ) : ViewModel() {
     fun addTransaction(amount: Double, title: String, isExpense: Boolean, category: String, paymentMethod: String, onComplete: () -> Unit) {
         viewModelScope.launch {
@@ -29,6 +30,13 @@ class TransactionViewModel(
             )
             transactionRepository.insertTransaction(transaction)
             onComplete()
+            
+            // Auto backup to Drive
+            try {
+                driveBackupManager.backupDataForCurrentUser(userId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

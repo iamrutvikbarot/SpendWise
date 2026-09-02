@@ -13,6 +13,9 @@ interface BudgetDao {
     @Query("SELECT * FROM budgets WHERE userId = :userId AND month = :month AND year = :year")
     fun getBudgetsForMonthFlow(userId: Int, month: Int, year: Int): Flow<List<Budget>>
 
+    @Query("SELECT * FROM budgets WHERE userId = :userId")
+    fun getAllBudgetsFlow(userId: Int): Flow<List<Budget>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBudget(budget: Budget)
 

@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.local.DataStoreManager
 import com.example.data.local.entity.User
+import com.example.data.repository.TransactionRepository
 import com.example.data.repository.UserRepository
+import com.example.data.remote.DriveBackupManager
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.security.MessageDigest
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -19,69 +22,50 @@ sealed class AuthState {
 
 class AuthViewModel(
     private val userRepository: UserRepository,
-    private val dataStoreManager: DataStoreManager
+    private val transactionRepository: TransactionRepository,
+    private val dataStoreManager: DataStoreManager,
+    private val driveBackupManager: DriveBackupManager
 ) : ViewModel() {
-
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
 
-    fun register(fullName: String, email: String, pin: String, confirmPin: String) {
-        if (fullName.isBlank() || email.isBlank() || pin.isBlank()) {
-            _authState.value = AuthState.Error("All fields are required")
-            return
-        }
-        if (pin != confirmPin) {
-            _authState.value = AuthState.Error("PINs do not match")
-            return
-        }
-        if (pin.length != 4) {
-            _authState.value = AuthState.Error("PIN must be 4 digits")
-            return
-        }
-
+    fun loginWithGoogle(account: GoogleSignInAccount) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             try {
-                val existingUser = userRepository.getUserByEmail(email)
-                if (existingUser != null) {
-                    _authState.value = AuthState.Error("Email already registered")
-                    return@launch
-                }
-
-                val hashedPin = hashPin(pin)
-                val newUser = User(
-                    fullName = fullName,
-                    email = email,
-                    pinHash = hashedPin
-                )
-                val userId = userRepository.insertUser(newUser).toInt()
-                val createdUser = newUser.copy(id = userId)
+                val email = account.email ?: ""
+                val fullName = account.displayName ?: "User"
                 
-                _authState.value = AuthState.Success(createdUser)
-            } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Registration failed")
-            }
-        }
-    }
-
-    fun login(email: String, pin: String) {
-        if (email.isBlank() || pin.isBlank()) {
-            _authState.value = AuthState.Error("Email and PIN are required")
-            return
-        }
-
-        viewModelScope.launch {
-            _authState.value = AuthState.Loading
-            try {
-                val user = userRepository.getUserByEmail(email)
-                if (user == null) {
-                    _authState.value = AuthState.Error("User not found")
+                if (email.isBlank()) {
+                    _authState.value = AuthState.Error("Email is required from Google account")
                     return@launch
                 }
 
-                if (user.pinHash != hashPin(pin)) {
-                    _authState.value = AuthState.Error("Invalid PIN")
-                    return@launch
+                // Check if user exists
+                var user = userRepository.getUserByEmail(email)
+                var isNewUser = false
+                
+                if (user == null) {
+                    // Create new user for google sign in
+                    val newUser = User(
+                        fullName = fullName,
+                        email = email,
+                        pinHash = "GOOGLE_AUTH" // Or we could make pin nullable, but this works for now
+                    )
+                    val userId = userRepository.insertUser(newUser).toInt()
+                    user = newUser.copy(id = userId)
+                    isNewUser = true
+                }
+
+                // Restore data from Drive if user has no local transactions
+                val currentTransactions = transactionRepository.getAllTransactionsFlow(user.id).first()
+                if (currentTransactions.isEmpty()) {
+                    try {
+                        driveBackupManager.restoreData(account, user.id)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        // Proceed to success even if restore fails
+                    }
                 }
 
                 dataStoreManager.saveLoginState(true, user.id)
@@ -92,12 +76,10 @@ class AuthViewModel(
         }
     }
 
-    private fun hashPin(pin: String): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hashBytes = digest.digest(pin.toByteArray())
-        return hashBytes.joinToString("") { "%02x".format(it) }
+    fun setError(message: String) {
+        _authState.value = AuthState.Error(message)
     }
-    
+
     fun resetState() {
         _authState.value = AuthState.Idle
     }

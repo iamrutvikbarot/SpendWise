@@ -23,7 +23,6 @@ import com.example.data.local.DataStoreManager
 import com.example.data.repository.UserRepository
 import com.example.ui.auth.AuthViewModel
 import com.example.ui.auth.LoginScreen
-import com.example.ui.auth.RegisterScreen
 import com.example.ui.components.FrostedBottomBar
 import com.example.ui.home.HomeDashboard
 import com.example.ui.home.HomeViewModel
@@ -47,14 +46,16 @@ class MainActivity : ComponentActivity() {
         val database = AppDatabase.getDatabase(this)
         val userRepository = UserRepository(database.userDao())
         val transactionRepository = com.example.data.repository.TransactionRepository(database.transactionDao())
+        val budgetRepository = com.example.data.repository.BudgetRepository(database.budgetDao())
         val dataStoreManager = DataStoreManager(this)
+        val driveBackupManager = com.example.data.remote.DriveBackupManager(this, transactionRepository, budgetRepository)
 
         val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return when {
-                    modelClass.isAssignableFrom(AuthViewModel::class.java) -> AuthViewModel(userRepository, dataStoreManager) as T
+                    modelClass.isAssignableFrom(AuthViewModel::class.java) -> AuthViewModel(userRepository, transactionRepository, dataStoreManager, driveBackupManager) as T
                     modelClass.isAssignableFrom(HomeViewModel::class.java) -> HomeViewModel(userRepository, transactionRepository, dataStoreManager) as T
-                    modelClass.isAssignableFrom(TransactionViewModel::class.java) -> TransactionViewModel(transactionRepository, dataStoreManager) as T
+                    modelClass.isAssignableFrom(TransactionViewModel::class.java) -> TransactionViewModel(transactionRepository, dataStoreManager, driveBackupManager) as T
                     else -> throw IllegalArgumentException("Unknown ViewModel class")
                 }
             }
@@ -105,38 +106,6 @@ class MainActivity : ComponentActivity() {
                                         navController.navigate("home") {
                                             popUpTo(0) { inclusive = true }
                                         }
-                                    },
-                                    onNavigateRegister = {
-                                        navController.navigate("register")
-                                    }
-                                )
-                            }
-
-                            composable(
-                                route = "register",
-                                enterTransition = {
-                                    slideIntoContainer(
-                                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                        animationSpec = tween(300, easing = FastOutSlowInEasing)
-                                    ) + fadeIn(tween(200))
-                                },
-                                exitTransition = {
-                                    slideOutOfContainer(
-                                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                        animationSpec = tween(300, easing = FastOutSlowInEasing)
-                                    ) + fadeOut(tween(200))
-                                }
-                            ) {
-                                val authViewModel: AuthViewModel = viewModel(factory = factory)
-                                RegisterScreen(
-                                    viewModel = authViewModel,
-                                    onRegisterSuccess = {
-                                        navController.navigate("login") {
-                                            popUpTo("register") { inclusive = true }
-                                        }
-                                    },
-                                    onNavigateLogin = {
-                                        navController.popBackStack()
                                     }
                                 )
                             }
@@ -156,6 +125,12 @@ class MainActivity : ComponentActivity() {
                                     onLogout = {
                                         lifecycleScope.launch {
                                             dataStoreManager.clearLoginState()
+                                            
+                                            // Sign out from Google Auth so account picker shows next time
+                                            val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+                                            val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(this@MainActivity, gso)
+                                            googleSignInClient.signOut()
+                                            
                                             navController.navigate("login") {
                                                 popUpTo(0) { inclusive = true }
                                             }
