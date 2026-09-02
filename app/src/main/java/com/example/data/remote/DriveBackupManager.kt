@@ -36,6 +36,7 @@ class DriveBackupManager(
 ) {
     private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
     private val FILE_NAME = "spendwise_backup.json"
+    private val FOLDER_NAME = "DO NOT DELETE -> SPEND WISE DATA"
     private val TAG = "DriveBackupManager"
 
     private fun getDriveService(account: GoogleSignInAccount): Drive {
@@ -51,6 +52,26 @@ class DriveBackupManager(
         ).setApplicationName("SpendWise").build()
     }
 
+    private fun getOrCreateBackupFolder(driveService: Drive): String {
+        val fileList = driveService.files().list()
+            .setSpaces("drive")
+            .setQ("mimeType='application/vnd.google-apps.folder' and name='$FOLDER_NAME' and trashed=false")
+            .execute()
+            
+        if (!fileList.files.isNullOrEmpty()) {
+            return fileList.files[0].id
+        }
+        
+        val folderMetadata = com.google.api.services.drive.model.File()
+        folderMetadata.name = FOLDER_NAME
+        folderMetadata.mimeType = "application/vnd.google-apps.folder"
+        
+        val folder = driveService.files().create(folderMetadata)
+            .setFields("id")
+            .execute()
+        return folder.id
+    }
+
     suspend fun backupData(account: GoogleSignInAccount, userId: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val transactions = transactionRepository.getAllTransactionsFlow(userId).first()
@@ -61,20 +82,22 @@ class DriveBackupManager(
             val byteArrayContent = ByteArrayContent.fromString("application/json", jsonString)
 
             val driveService = getDriveService(account)
+            val folderId = getOrCreateBackupFolder(driveService)
             
-            // Check if file exists
+            // Check if file exists in the folder
             val fileList = driveService.files().list()
                 .setSpaces("drive")
-                .setQ("name='$FILE_NAME' and trashed=false")
+                .setQ("name='$FILE_NAME' and trashed=false and '$folderId' in parents")
                 .execute()
                 
-            if (fileList.files.isNotEmpty()) {
+            if (!fileList.files.isNullOrEmpty()) {
                 val fileId = fileList.files[0].id
                 driveService.files().update(fileId, null, byteArrayContent).execute()
                 Log.d(TAG, "Updated existing backup file on Drive")
             } else {
                 val fileMetadata = com.google.api.services.drive.model.File()
                 fileMetadata.name = FILE_NAME
+                fileMetadata.parents = listOf(folderId)
                 driveService.files().create(fileMetadata, byteArrayContent).execute()
                 Log.d(TAG, "Created new backup file on Drive")
             }
@@ -89,12 +112,24 @@ class DriveBackupManager(
         try {
             val driveService = getDriveService(account)
             
-            val fileList = driveService.files().list()
+            val folderList = driveService.files().list()
                 .setSpaces("drive")
-                .setQ("name='$FILE_NAME' and trashed=false")
+                .setQ("mimeType='application/vnd.google-apps.folder' and name='$FOLDER_NAME' and trashed=false")
                 .execute()
                 
-            if (fileList.files.isNotEmpty()) {
+            if (folderList.files.isNullOrEmpty()) {
+                Log.d(TAG, "No backup folder found on Drive")
+                return@withContext false
+            }
+            
+            val folderId = folderList.files[0].id
+            
+            val fileList = driveService.files().list()
+                .setSpaces("drive")
+                .setQ("name='$FILE_NAME' and trashed=false and '$folderId' in parents")
+                .execute()
+                
+            if (!fileList.files.isNullOrEmpty()) {
                 val fileId = fileList.files[0].id
                 val outputStream = ByteArrayOutputStream()
                 driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream)
