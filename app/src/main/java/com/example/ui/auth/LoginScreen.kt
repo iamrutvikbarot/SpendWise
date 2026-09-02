@@ -186,6 +186,19 @@ fun LoginScreen(
                 },
                 enabled = authState !is AuthState.Loading
             )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            TextButton(
+                onClick = { viewModel.loginTestMode() },
+                enabled = authState !is AuthState.Loading
+            ) {
+                Text(
+                    text = "Continue as Guest (Test Mode)",
+                    color = TextSecondary,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }

@@ -76,6 +76,33 @@ class AuthViewModel(
         }
     }
 
+    fun loginTestMode() {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            try {
+                val email = "test@example.com"
+                val fullName = "Test User"
+                
+                var user = userRepository.getUserByEmail(email)
+                
+                if (user == null) {
+                    val newUser = User(
+                        fullName = fullName,
+                        email = email,
+                        pinHash = "TEST_MODE"
+                    )
+                    val userId = userRepository.insertUser(newUser).toInt()
+                    user = newUser.copy(id = userId)
+                }
+                
+                dataStoreManager.saveLoginState(true, user.id)
+                _authState.value = AuthState.Success(user)
+            } catch (e: Exception) {
+                _authState.value = AuthState.Error(e.message ?: "Test Mode Login failed")
+            }
+        }
+    }
+
     fun setError(message: String) {
         _authState.value = AuthState.Error(message)
     }
