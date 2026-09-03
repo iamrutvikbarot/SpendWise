@@ -254,7 +254,7 @@ fun ScannerScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground1)
+            .background(Background)
     ) {
         // =========================================================================
         // FULL SCREEN LIVE CAMERA VIEW (When in live mode and result is not extracted yet)
@@ -335,7 +335,7 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .size(width = boxWidth, height = boxHeight)
                                 .clip(RoundedCornerShape(20.dp))
-                                .border(2.dp, PrimaryEmerald.copy(alpha = 0.85f), RoundedCornerShape(20.dp))
+                                .border(2.dp, PrimaryTeal.copy(alpha = 0.85f), RoundedCornerShape(20.dp))
                         ) {
                             // Animated Laser Line
                             Box(
@@ -347,7 +347,7 @@ fun ScannerScreen(
                                         Brush.horizontalGradient(
                                             listOf(
                                                 Color.Transparent,
-                                                PrimaryEmerald,
+                                                PrimaryTeal,
                                                 PrimaryTeal,
                                                 Color(0xFF6EE7B7),
                                                 Color.Transparent
@@ -375,7 +375,7 @@ fun ScannerScreen(
                             Icon(
                                 imageVector = Icons.Outlined.AutoAwesome,
                                 contentDescription = null,
-                                tint = PrimaryEmerald,
+                                tint = PrimaryTeal,
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
@@ -419,7 +419,7 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(16.dp))
                                 .background(Color.Black.copy(alpha = 0.6f))
-                                .border(1.dp, PrimaryEmerald.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+                                .border(1.dp, PrimaryTeal.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
                                 .padding(horizontal = 14.dp, vertical = 8.dp)
                         ) {
                             Text(
@@ -435,7 +435,7 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .size(44.dp)
                                 .clip(CircleShape)
-                                .background(if (isFlashOn) PrimaryEmerald else Color.Black.copy(alpha = 0.6f))
+                                .background(if (isFlashOn) PrimaryTeal else Color.Black.copy(alpha = 0.6f))
                                 .border(1.dp, Color.White.copy(alpha = 0.25f), CircleShape)
                                 .clickable {
                                     val next = !isFlashOn
@@ -500,10 +500,10 @@ fun ScannerScreen(
                                 .scale(shutterScale)
                                 .clip(CircleShape)
                                 .background(Color.White.copy(alpha = 0.2f))
-                                .border(3.5.dp, PrimaryEmerald, CircleShape)
+                                .border(3.5.dp, PrimaryTeal, CircleShape)
                                 .padding(6.dp)
                                 .clip(CircleShape)
-                                .background(Brush.linearGradient(listOf(PrimaryGradientStart, PrimaryGradientEnd)))
+                                .background(Brush.linearGradient(listOf(PrimaryTeal, PrimaryTealDark)))
                                 .clickable(
                                     interactionSource = shutterInteraction,
                                     indication = null,
@@ -541,14 +541,14 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .size(70.dp)
                                 .clip(CircleShape)
-                                .background(SlateCardElevated)
-                                .border(1.dp, GlassCardBorder, CircleShape),
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.CameraAlt,
                                 contentDescription = null,
-                                tint = PrimaryEmerald,
+                                tint = PrimaryTeal,
                                 modifier = Modifier.size(34.dp)
                             )
                         }
@@ -608,8 +608,8 @@ fun ScannerScreen(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(SlateCardElevated)
-                            .border(1.dp, GlassCardBorder, CircleShape)
+                            .background(Color.White)
+                            .border(1.dp, DividerColor, CircleShape)
                             .clickable(onClick = onNavigateBack),
                         contentAlignment = Alignment.Center
                     ) {
@@ -638,7 +638,7 @@ fun ScannerScreen(
                             Icon(
                                 imageVector = Icons.Outlined.AutoAwesome,
                                 contentDescription = null,
-                                tint = PrimaryEmerald,
+                                tint = PrimaryTeal,
                                 modifier = Modifier.size(15.dp)
                             )
                         }
@@ -655,8 +655,8 @@ fun ScannerScreen(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(SlateCardElevated)
-                            .border(1.dp, GlassCardBorder, RoundedCornerShape(12.dp))
+                            .background(Color.White)
+                            .border(1.dp, DividerColor, RoundedCornerShape(12.dp))
                             .clickable {
                                 scanMode = ScanMode.CAMERA_LIVE
                                 capturedBitmap = null
@@ -676,7 +676,7 @@ fun ScannerScreen(
                             Icon(
                                 imageVector = Icons.Default.CameraAlt,
                                 contentDescription = "Camera",
-                                tint = PrimaryEmerald,
+                                tint = PrimaryTeal,
                                 modifier = Modifier.size(15.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
@@ -705,8 +705,8 @@ fun ScannerScreen(
                                 .fillMaxWidth()
                                 .height(160.dp)
                                 .clip(RoundedCornerShape(18.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, PrimaryEmerald.copy(alpha = 0.4f), RoundedCornerShape(18.dp)),
+                                .background(Color.White)
+                                .border(1.dp, PrimaryTeal.copy(alpha = 0.4f), RoundedCornerShape(18.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             if (capturedBitmap != null) {
@@ -744,7 +744,7 @@ fun ScannerScreen(
                                 Icon(
                                     imageVector = Icons.Default.CheckCircle,
                                     contentDescription = null,
-                                    tint = PrimaryEmerald,
+                                    tint = PrimaryTeal,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -766,8 +766,8 @@ fun ScannerScreen(
                                 .fillMaxWidth()
                                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0xFF000000))
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, PrimaryEmerald.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+                                .background(Color.White)
+                                .border(1.dp, PrimaryTeal.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
                                 .padding(16.dp)
                         ) {
                             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -780,7 +780,7 @@ fun ScannerScreen(
                                         Icon(
                                             imageVector = Icons.Default.CheckCircle,
                                             contentDescription = null,
-                                            tint = PrimaryEmerald,
+                                            tint = PrimaryTeal,
                                             modifier = Modifier.size(18.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
@@ -794,20 +794,20 @@ fun ScannerScreen(
                                     Box(
                                         modifier = Modifier
                                             .clip(RoundedCornerShape(8.dp))
-                                            .background(PrimaryEmerald.copy(alpha = 0.15f))
-                                            .border(1.dp, PrimaryEmerald.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+                                            .background(PrimaryTeal.copy(alpha = 0.15f))
+                                            .border(1.dp, PrimaryTeal.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
                                             .padding(horizontal = 8.dp, vertical = 3.dp)
                                     ) {
                                         Text(
                                             text = data.confidenceNotes.ifEmpty { data.platform ?: "AI Extracted" },
-                                            color = PrimaryEmerald,
+                                            color = PrimaryTeal,
                                             fontSize = 10.5.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }
 
-                                Divider(color = GlassCardBorder10)
+                                Divider(color = DividerColor)
 
                                 // Editable Amount Field
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -833,11 +833,11 @@ fun ScannerScreen(
                                         placeholder = { Text("0.00", color = TextTertiary) },
                                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                         colors = OutlinedTextFieldDefaults.colors(
-                                            focusedBorderColor = PrimaryEmerald,
-                                            unfocusedBorderColor = GlassCardBorder,
-                                            focusedContainerColor = SlateCardElevated,
-                                            unfocusedContainerColor = SlateCardElevated,
-                                            cursorColor = PrimaryEmerald
+                                            focusedBorderColor = PrimaryTeal,
+                                            unfocusedBorderColor = DividerColor,
+                                            focusedContainerColor = Color.White,
+                                            unfocusedContainerColor = Color.White,
+                                            cursorColor = PrimaryTeal
                                         ),
                                         shape = RoundedCornerShape(12.dp)
                                     )
@@ -865,11 +865,11 @@ fun ScannerScreen(
                                         },
                                         placeholder = { Text("e.g. Indane Gas, Amazon Pay", color = TextTertiary) },
                                         colors = OutlinedTextFieldDefaults.colors(
-                                            focusedBorderColor = PrimaryEmerald,
-                                            unfocusedBorderColor = GlassCardBorder,
-                                            focusedContainerColor = SlateCardElevated,
-                                            unfocusedContainerColor = SlateCardElevated,
-                                            cursorColor = PrimaryEmerald
+                                            focusedBorderColor = PrimaryTeal,
+                                            unfocusedBorderColor = DividerColor,
+                                            focusedContainerColor = Color.White,
+                                            unfocusedContainerColor = Color.White,
+                                            cursorColor = PrimaryTeal
                                         ),
                                         shape = RoundedCornerShape(12.dp)
                                     )
@@ -884,10 +884,10 @@ fun ScannerScreen(
                                             Box(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .background(if (isSelected) PrimaryEmerald.copy(alpha = 0.2f) else SlateCardElevated)
+                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
                                                     .border(
                                                         1.dp,
-                                                        if (isSelected) PrimaryEmerald else GlassCardBorder,
+                                                        if (isSelected) PrimaryTeal else DividerColor,
                                                         RoundedCornerShape(10.dp)
                                                     )
                                                     .clickable { editableCategory = cat }
@@ -895,7 +895,7 @@ fun ScannerScreen(
                                             ) {
                                                 Text(
                                                     text = cat,
-                                                    color = if (isSelected) PrimaryEmerald else TextSecondary,
+                                                    color = if (isSelected) PrimaryTeal else TextSecondary,
                                                     fontSize = 11.5.sp,
                                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                                 )
@@ -913,10 +913,10 @@ fun ScannerScreen(
                                             Box(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else SlateCardElevated)
+                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
                                                     .border(
                                                         1.dp,
-                                                        if (isSelected) PrimaryTeal else GlassCardBorder,
+                                                        if (isSelected) PrimaryTeal else DividerColor,
                                                         RoundedCornerShape(10.dp)
                                                     )
                                                     .clickable { editablePaymentMethod = method }
@@ -996,8 +996,8 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(20.dp))
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, RoundedCornerShape(20.dp))
                                 .padding(24.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -1009,13 +1009,13 @@ fun ScannerScreen(
                                     modifier = Modifier
                                         .size(60.dp)
                                         .clip(CircleShape)
-                                        .background(SlateCardElevated),
+                                        .background(Color.White),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.PhotoLibrary,
                                         contentDescription = null,
-                                        tint = PrimaryEmerald,
+                                        tint = PrimaryTeal,
                                         modifier = Modifier.size(28.dp)
                                     )
                                 }
@@ -1109,7 +1109,7 @@ fun ScannerScreen(
                             drawArc(
                                 brush = Brush.sweepGradient(
                                     listOf(
-                                        PrimaryEmerald,
+                                        PrimaryTeal,
                                         PrimaryTeal,
                                         Color.Transparent
                                     )
@@ -1124,7 +1124,7 @@ fun ScannerScreen(
                         Icon(
                             imageVector = Icons.Outlined.AutoAwesome,
                             contentDescription = null,
-                            tint = PrimaryEmerald,
+                            tint = PrimaryTeal,
                             modifier = Modifier.size(32.dp)
                         )
                     }

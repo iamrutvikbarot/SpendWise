@@ -64,15 +64,15 @@ fun TransactionDetailDialog(
     }
 
     val catColor = when {
-        catLower.contains("food") -> FoodColor
-        catLower.contains("transport") -> TransportColor
-        catLower.contains("shopping") -> ShoppingColor
-        catLower.contains("bill") || catLower.contains("gas") -> BillsColor
-        catLower.contains("health") -> HealthColor
-        catLower.contains("entertainment") -> EntertainmentColor
-        catLower.contains("education") -> EducationColor
+        catLower.contains("food") -> CatFood
+        catLower.contains("transport") -> CatTransport
+        catLower.contains("shopping") -> CatShopping
+        catLower.contains("bill") || catLower.contains("gas") -> CatBills
+        catLower.contains("health") -> CatHealth
+        catLower.contains("entertainment") -> CatEntertainment
+        catLower.contains("education") -> CatEducation
         !isExpense -> IncomeGreen
-        else -> OthersColor
+        else -> CatOthers
     }
 
     Dialog(onDismissRequest = onDismiss) {
@@ -92,8 +92,8 @@ fun TransactionDetailDialog(
                     width = 1.2.dp,
                     brush = Brush.verticalGradient(
                         listOf(
-                            if (isExpense) ExpenseRed.copy(alpha = 0.5f) else PrimaryEmerald.copy(alpha = 0.5f),
-                            GlassCardBorder
+                            if (isExpense) ExpenseRed.copy(alpha = 0.5f) else PrimaryTeal.copy(alpha = 0.5f),
+                            DividerColor
                         )
                     ),
                     shape = RoundedCornerShape(28.dp)
@@ -121,8 +121,8 @@ fun TransactionDetailDialog(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape)
-                            .background(SlateCardElevated)
-                            .border(1.dp, GlassCardBorder, CircleShape)
+                            .background(Color.White)
+                            .border(1.dp, DividerColor, CircleShape)
                             .clickable(onClick = onDismiss),
                         contentAlignment = Alignment.Center
                     ) {
@@ -143,7 +143,7 @@ fun TransactionDetailDialog(
                         .background(if (isExpense) ExpenseRedBg else IncomeGreenBg)
                         .border(
                             1.dp,
-                            if (isExpense) ExpenseRed.copy(alpha = 0.35f) else PrimaryEmerald.copy(alpha = 0.35f),
+                            if (isExpense) ExpenseRed.copy(alpha = 0.35f) else PrimaryTeal.copy(alpha = 0.35f),
                             RoundedCornerShape(20.dp)
                         )
                         .padding(18.dp),
@@ -197,8 +197,8 @@ fun TransactionDetailDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(18.dp))
-                        .background(SlateCardSurface)
-                        .border(1.dp, GlassCardBorder, RoundedCornerShape(18.dp))
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, RoundedCornerShape(18.dp))
                         .padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -209,7 +209,7 @@ fun TransactionDetailDialog(
                         valueColor = catColor
                     )
 
-                    Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                    Divider(color = DividerColor, thickness = 0.8.dp)
 
                     // Payment Method Row
                     DetailRow(
@@ -218,7 +218,7 @@ fun TransactionDetailDialog(
                         valueColor = TextPrimary
                     )
 
-                    Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                    Divider(color = DividerColor, thickness = 0.8.dp)
 
                     // Date Row
                     DetailRow(
@@ -227,7 +227,7 @@ fun TransactionDetailDialog(
                         valueColor = TextPrimary
                     )
 
-                    Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                    Divider(color = DividerColor, thickness = 0.8.dp)
 
                     // Time Row
                     DetailRow(
@@ -238,14 +238,14 @@ fun TransactionDetailDialog(
 
                     // Reference ID or Tx ID
                     if (!transaction.upiRefId.isNullOrBlank()) {
-                        Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                        Divider(color = DividerColor, thickness = 0.8.dp)
                         DetailRow(
                             label = "Ref / Tx ID",
                             value = transaction.upiRefId,
                             valueColor = TextTertiary
                         )
                     } else {
-                        Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                        Divider(color = DividerColor, thickness = 0.8.dp)
                         DetailRow(
                             label = "Record ID",
                             value = "#TXN-${transaction.id.toString().padStart(5, '0')}",
@@ -255,7 +255,7 @@ fun TransactionDetailDialog(
 
                     // Optional Note
                     if (!transaction.note.isNullOrBlank()) {
-                        Divider(color = GlassCardBorder10, thickness = 0.8.dp)
+                        Divider(color = DividerColor, thickness = 0.8.dp)
                         DetailRow(
                             label = "Note",
                             value = transaction.note,
@@ -272,7 +272,7 @@ fun TransactionDetailDialog(
                     ) {
                         Button(
                             onClick = { showDeleteConfirm = false },
-                            colors = ButtonDefaults.buttonColors(containerColor = SlateCardElevated),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f).height(44.dp)
                         ) {
@@ -315,8 +315,8 @@ fun TransactionDetailDialog(
 
                         Button(
                             onClick = onDismiss,
-                            colors = ButtonDefaults.buttonColors(containerColor = SlateCardElevated),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, GlassCardBorder),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, DividerColor),
                             shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f).height(44.dp)
                         ) {

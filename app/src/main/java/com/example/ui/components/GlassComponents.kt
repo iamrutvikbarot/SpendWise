@@ -53,13 +53,13 @@ fun GlassTextField(
         singleLine = singleLine,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = SlateCardSurface.copy(alpha = 0.8f),
-            unfocusedContainerColor = SlateCardSurface.copy(alpha = 0.5f),
+            focusedContainerColor = Color.White.copy(alpha = 0.8f),
+            unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
             focusedTextColor = TextPrimary,
             unfocusedTextColor = TextPrimary,
-            focusedBorderColor = PrimaryEmerald,
-            unfocusedBorderColor = GlassCardBorder,
-            cursorColor = PrimaryEmerald
+            focusedBorderColor = PrimaryTeal,
+            unfocusedBorderColor = DividerColor,
+            cursorColor = PrimaryTeal
         ),
         shape = RoundedCornerShape(16.dp),
         modifier = modifier.fillMaxWidth()
@@ -74,7 +74,7 @@ fun GradientButton(
     enabled: Boolean = true,
     height: Dp = 54.dp,
     icon: (@Composable () -> Unit)? = null,
-    gradientColors: List<Color> = listOf(PrimaryGradientStart, PrimaryGradientEnd)
+    gradientColors: List<Color> = listOf(PrimaryTeal, PrimaryTealDark)
 ) {
     val gradient = Brush.horizontalGradient(gradientColors)
     
@@ -130,8 +130,8 @@ fun SecondaryGlassButton(
             .fillMaxWidth()
             .height(height)
             .clip(RoundedCornerShape(16.dp))
-            .background(SlateCardElevated.copy(alpha = 0.6f))
-            .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+            .background(Color.White.copy(alpha = 0.6f))
+            .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {

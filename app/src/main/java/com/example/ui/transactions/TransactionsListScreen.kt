@@ -61,7 +61,7 @@ fun TransactionsListScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground1)
+            .background(Background)
     ) {
         Column(
             modifier = Modifier
@@ -90,8 +90,8 @@ fun TransactionsListScreen(
                         .size(40.dp)
                         .scale(backScale)
                         .clip(CircleShape)
-                        .background(SlateCardSurface)
-                        .border(1.dp, GlassCardBorder, CircleShape)
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, CircleShape)
                         .clickable(
                             interactionSource = backInteraction,
                             indication = null,
@@ -175,15 +175,15 @@ fun TransactionsListScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(DarkBackground1)
+                                    .background(Background)
                                     .padding(vertical = 8.dp)
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(12.dp))
-                                        .background(SlateCardElevated)
-                                        .border(1.dp, GlassCardBorder.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                                        .background(Color.White)
+                                        .border(1.dp, DividerColor.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                                         .padding(horizontal = 14.dp, vertical = 9.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
@@ -272,8 +272,8 @@ fun TransactionsListScreen(
                                     .fillMaxWidth()
                                     .scale(itemScale)
                                     .clip(RoundedCornerShape(14.dp))
-                                    .background(SlateCardSurface)
-                                    .border(1.dp, GlassCardBorder.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                                    .background(Color.White)
+                                    .border(1.dp, DividerColor.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
                                     .clickable(
                                         interactionSource = interactionSource,
                                         indication = null,
@@ -297,7 +297,7 @@ fun TransactionsListScreen(
                                             modifier = Modifier
                                                 .size(42.dp)
                                                 .clip(CircleShape)
-                                                .background(SlateCardElevated),
+                                                .background(Color.White),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(text = icon, fontSize = 20.sp)

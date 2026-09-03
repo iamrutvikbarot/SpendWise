@@ -3,7 +3,6 @@ package com.example.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,16 +12,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.DocumentScanner
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,17 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.local.entity.Transaction
 import com.example.ui.components.FrostedBottomBar
-import com.example.ui.components.GlassTextField
 import com.example.ui.components.GradientButton
-import com.example.ui.components.SecondaryGlassButton
 import com.example.ui.theme.*
 import com.example.ui.transactions.TransactionDetailDialog
 import java.text.NumberFormat
@@ -65,14 +58,15 @@ fun HomeDashboard(
     val expense by viewModel.totalExpense.collectAsState()
 
     var selectedTxForDetails by remember { mutableStateOf<Transaction?>(null) }
+    var hideBalance by remember { mutableStateOf(false) }
 
     val format = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
-    val balanceStr = format.format(balance)
+    val balanceStr = if (hideBalance) "••••••" else format.format(balance)
     val incomeStr = format.format(income)
     val expenseStr = format.format(expense)
 
-    val firstName = user?.fullName?.substringBefore(" ")?.takeIf { it.isNotBlank() } ?: "Friend"
-    val initials = user?.fullName?.split(" ")?.mapNotNull { it.firstOrNull()?.uppercase() }?.joinToString("")?.take(2)?.ifBlank { "U" } ?: "U"
+    val firstName = user?.fullName?.substringBefore(" ")?.takeIf { it.isNotBlank() } ?: "User"
+    val initials = user?.fullName?.split(" ")?.mapNotNull { it.firstOrNull()?.uppercase() }?.joinToString("")?.take(2)?.ifBlank { "U" } ?: "TU"
 
     // Time of day greeting
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -87,41 +81,8 @@ fun HomeDashboard(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        DarkBackground1,
-                        DarkBackground2,
-                        DarkBackground1
-                    )
-                )
-            )
+            .background(Background)
     ) {
-        // Decorative atmospheric background glow circles
-        Box(
-            modifier = Modifier
-                .size(300.dp)
-                .offset(x = (-80).dp, y = (-80).dp)
-                .background(
-                    Brush.radialGradient(
-                        listOf(PrimaryEmerald.copy(alpha = 0.08f), Color.Transparent)
-                    ),
-                    shape = CircleShape
-                )
-        )
-        Box(
-            modifier = Modifier
-                .size(260.dp)
-                .align(Alignment.TopEnd)
-                .offset(x = 80.dp, y = 120.dp)
-                .background(
-                    Brush.radialGradient(
-                        listOf(PrimaryTeal.copy(alpha = 0.06f), Color.Transparent)
-                    ),
-                    shape = CircleShape
-                )
-        )
-
         // Main Scrollable Body
         Column(
             modifier = Modifier
@@ -134,102 +95,86 @@ fun HomeDashboard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                    .padding(horizontal = 20.dp, vertical = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .size(46.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(PrimaryEmerald, PrimaryTeal)
-                                )
-                            )
-                            .border(1.5.dp, GlassCardBorder, CircleShape)
+                            .background(PrimaryTeal)
                             .clickable { onNavigateBottomBar("profile") },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = initials,
-                            color = Color(0xFF090D16),
+                            color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 18.sp
                         )
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
                             text = "$greeting, $firstName 👋",
-                            fontSize = 17.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextPrimary
                         )
                         Text(
                             text = todayStr,
                             fontSize = 12.sp,
-                            color = TextSecondary
+                            color = TextSecondary,
+                            modifier = Modifier.padding(top = 2.dp)
                         )
                     }
                 }
 
-                // Quick Scan Receipt Header Button
+                // Notification Bell
                 Box(
                     modifier = Modifier
-                        .size(42.dp)
+                        .size(44.dp)
                         .clip(CircleShape)
-                        .background(SlateCardElevated)
-                        .border(1.dp, GlassCardBorder, CircleShape)
-                        .clickable { onNavigateToScanner() },
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, CircleShape)
+                        .clickable { /* Handle Notifications */ },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.DocumentScanner,
-                        contentDescription = "Scan Receipt",
-                        tint = PrimaryEmerald,
-                        modifier = Modifier.size(20.dp)
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = "Notifications",
+                        tint = PrimaryTeal,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    // Notification red dot badge
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(ExpenseRed)
+                            .align(Alignment.TopEnd)
+                            .offset(x = (-10).dp, y = 10.dp)
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             // Main Content Area
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                // Total Balance Card (Luxury Metallic Glass Finish)
+                // Total Balance Card
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .shadow(elevation = 16.dp, shape = RoundedCornerShape(24.dp), spotColor = Color(0xFF000000))
+                        .shadow(elevation = 6.dp, shape = RoundedCornerShape(24.dp), spotColor = Color(0x1A000000))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    Color(0xFF192233),
-                                    Color(0xFF131A29),
-                                    Color(0xFF16233B)
-                                )
-                            )
-                        )
-                        .border(
-                            1.dp,
-                            Brush.linearGradient(
-                                listOf(
-                                    PrimaryEmerald.copy(alpha = 0.4f),
-                                    Color.White.copy(alpha = 0.1f),
-                                    PrimaryTeal.copy(alpha = 0.2f)
-                                )
-                            ),
-                            RoundedCornerShape(24.dp)
-                        )
-                        .padding(22.dp)
+                        .background(Color.White)
+                        .padding(24.dp)
                 ) {
                     Column {
                         Row(
@@ -241,72 +186,89 @@ fun HomeDashboard(
                                 text = "TOTAL BALANCE",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                letterSpacing = 1.2.sp,
+                                letterSpacing = 1.sp,
                                 color = TextSecondary
                             )
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(PrimaryEmerald.copy(alpha = 0.15f))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .background(SecondaryTeal)
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    Text(text = "✨", fontSize = 10.sp)
+                                    Icon(
+                                        imageVector = Icons.Outlined.Check,
+                                        contentDescription = null,
+                                        tint = PrimaryTeal,
+                                        modifier = Modifier.size(12.dp)
+                                    )
                                     Text(
                                         text = "Live",
-                                        color = PrimaryEmerald,
-                                        fontSize = 11.sp,
+                                        color = PrimaryTeal,
+                                        fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Text(
-                            text = balanceStr,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = (-0.5).sp,
-                            color = TextPrimary
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = balanceStr,
+                                fontSize = 36.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = TextPrimary
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Icon(
+                                imageVector = Icons.Default.Visibility,
+                                contentDescription = "Toggle Balance Visibility",
+                                tint = TextTertiary,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clickable { hideBalance = !hideBalance }
+                            )
+                        }
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                        // Income & Expense Breakdown Pills with 3D Icons
+                        // Income & Expense Breakdown Pills
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             // Income Box
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color(0xFF0F1824))
-                                    .border(1.dp, IncomeGreen.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                                    .background(Color.White)
+                                    .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                     .padding(12.dp)
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(CircleShape)
-                                            .background(IncomeGreenBg),
+                                            .size(36.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(IncomeGreen),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Text(text = "📈", fontSize = 16.sp)
+                                        Text(text = "↗", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                                     }
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(10.dp))
                                     Column {
-                                        Text("Income", fontSize = 11.sp, color = TextSecondary)
+                                        Text("Income", fontSize = 12.sp, color = TextSecondary)
                                         Text(
                                             incomeStr,
-                                            fontSize = 13.sp,
+                                            fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = IncomeGreen
                                         )
@@ -319,26 +281,26 @@ fun HomeDashboard(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color(0xFF0F1824))
-                                    .border(1.dp, ExpenseRed.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                                    .background(Color.White)
+                                    .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                     .padding(12.dp)
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(CircleShape)
-                                            .background(ExpenseRedBg),
+                                            .size(36.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(ExpenseRed),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Text(text = "📉", fontSize = 16.sp)
+                                        Text(text = "↘", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                                     }
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(10.dp))
                                     Column {
-                                        Text("Expense", fontSize = 11.sp, color = TextSecondary)
+                                        Text("Expense", fontSize = 12.sp, color = TextSecondary)
                                         Text(
                                             expenseStr,
-                                            fontSize = 13.sp,
+                                            fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = ExpenseRed
                                         )
@@ -347,56 +309,47 @@ fun HomeDashboard(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(18.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                        // High-Utility Action CTAs (Add Transaction & Scan)
+                        // Action CTAs (Add Transaction & Scan)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             // Primary Add Transaction Button
-                            GradientButton(
-                                text = "Add Entry",
+                            Button(
                                 onClick = onNavigateToAddTransaction,
-                                modifier = Modifier.weight(1f),
-                                height = 46.dp,
-                                icon = {
-                                    Text(text = "➕", fontSize = 15.sp)
-                                }
-                            )
-
-                            // Scan Receipt Button
-                            Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(46.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(SlateCardElevated)
-                                    .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
-                                    .clickable(onClick = onNavigateToScanner)
-                                    .padding(horizontal = 12.dp),
-                                contentAlignment = Alignment.Center
+                                    .height(48.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryTeal),
+                                shape = RoundedCornerShape(24.dp)
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Text(text = "🧾", fontSize = 16.sp)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "Scan Bill",
-                                        color = TextPrimary,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp
-                                    )
-                                }
+                                Text(text = "+", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = "Add Entry", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            }
+
+                            // Scan Receipt Button
+                            OutlinedButton(
+                                onClick = onNavigateToScanner,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF3B82F6)),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF3B82F6).copy(alpha = 0.3f)),
+                                shape = RoundedCornerShape(24.dp)
+                            ) {
+                                Text(text = "🧾", fontSize = 16.sp)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = "Scan Bill", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
                             }
                         }
                     }
                 }
 
                 // Recent Transactions Header & Section
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -404,24 +357,17 @@ fun HomeDashboard(
                     ) {
                         Text(
                             text = "Recent Activity",
-                            fontSize = 16.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextPrimary
                         )
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(SlateCardElevated)
-                                .clickable { onNavigateToSeeAll() }
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = "See All →",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = PrimaryEmerald
-                            )
-                        }
+                        Text(
+                            text = "See All →",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = PrimaryTeal,
+                            modifier = Modifier.clickable { onNavigateToSeeAll() }
+                        )
                     }
 
                     if (transactions.isEmpty()) {
@@ -429,53 +375,57 @@ fun HomeDashboard(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .shadow(elevation = 2.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0x0D000000))
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(20.dp))
-                                .padding(28.dp),
+                                .background(Color.White)
+                                .padding(32.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(54.dp)
+                                        .size(64.dp)
                                         .clip(CircleShape)
-                                        .background(SlateCardElevated),
+                                        .background(Background),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.ReceiptLong,
+                                        imageVector = Icons.Outlined.AccountBalanceWallet,
                                         contentDescription = null,
-                                        tint = TextTertiary,
-                                        modifier = Modifier.size(28.dp)
+                                        tint = PrimaryTeal.copy(alpha = 0.5f),
+                                        modifier = Modifier.size(32.dp)
                                     )
                                 }
                                 Text(
                                     text = "No Transactions Logged Yet",
                                     color = TextPrimary,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
+                                    fontSize = 16.sp
                                 )
                                 Text(
-                                    text = "Add your first expense or scan a receipt to start tracking.",
+                                    text = "Add your first expense or scan a receipt\nto start tracking.",
                                     color = TextSecondary,
-                                    fontSize = 12.sp,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                    fontSize = 13.sp,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    lineHeight = 18.sp
                                 )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                GradientButton(
-                                    text = "+ Add First Transaction",
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Button(
                                     onClick = onNavigateToAddTransaction,
-                                    height = 42.dp
-                                )
+                                    modifier = Modifier.height(44.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryTeal),
+                                    shape = RoundedCornerShape(22.dp)
+                                ) {
+                                    Text(text = "+ Add First Transaction", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                                }
                             }
                         }
                     } else {
                         // Transactions List (Latest 5 items)
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             transactions.take(5).forEach { tx ->
                                 val isExp = tx.type.equals("EXPENSE", ignoreCase = true)
                                 val icon = when (tx.category.lowercase()) {
@@ -500,14 +450,14 @@ fun HomeDashboard(
                                     else -> if (isExp) "💸" else "💵"
                                 }
                                 val colorBg = when (tx.category.lowercase()) {
-                                    "food" -> FoodColor
-                                    "transport" -> TransportColor
-                                    "shopping" -> ShoppingColor
-                                    "bills" -> BillsColor
-                                    "health" -> HealthColor
-                                    "entertainment" -> EntertainmentColor
-                                    "education" -> EducationColor
-                                    else -> if (isExp) ExpenseRed else IncomeGreen
+                                    "food" -> CatFoodBg
+                                    "transport" -> CatTransportBg
+                                    "shopping" -> CatShoppingBg
+                                    "bills" -> CatBillsBg
+                                    "health" -> CatHealthBg
+                                    "entertainment" -> CatEntertainmentBg
+                                    "education" -> CatEducationBg
+                                    else -> if (isExp) ExpenseRedBg else IncomeGreenBg
                                 }
                                 val sign = if (isExp) "-" else "+"
                                 val colorText = if (isExp) ExpenseRed else IncomeGreen
@@ -531,7 +481,7 @@ fun HomeDashboard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
 
         // Transaction Detail Dialog
@@ -546,7 +496,7 @@ fun HomeDashboard(
             )
         }
 
-        // Floating Frosted Bottom Bar
+        // Floating Bottom Bar (handled externally or modified FrostedBottomBar)
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             FrostedBottomBar(
                 currentRoute = currentRoute,
@@ -591,15 +541,15 @@ fun ModernTransactionCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(cardScale)
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp), spotColor = Color(0x0A000000))
             .clip(RoundedCornerShape(16.dp))
-            .background(SlateCardSurface)
-            .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+            .background(Color.White)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick
             )
-            .padding(horizontal = 14.dp, vertical = 12.dp)
+            .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -608,16 +558,15 @@ fun ModernTransactionCard(
             // Category Icon Avatar
             Box(
                 modifier = Modifier
-                    .size(42.dp)
-                    .clip(RoundedCornerShape(13.dp))
-                    .background(colorBg.copy(alpha = 0.15f))
-                    .border(1.dp, colorBg.copy(alpha = 0.3f), RoundedCornerShape(13.dp)),
+                    .size(46.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(colorBg),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = icon, fontSize = 19.sp)
+                Text(text = icon, fontSize = 22.sp)
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Center Column: Merchant Name / Title & Subtitle with Date
             Column(
@@ -626,13 +575,13 @@ fun ModernTransactionCard(
             ) {
                 Text(
                     text = cleanTitle,
-                    fontSize = 14.5.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextPrimary,
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 val subtitleText = if (cleanCategory.isNotBlank() && !cleanCategory.equals("other", true) && !cleanCategory.equals(cleanTitle, true)) {
                     "$cleanCategory • $cleanDate"
                 } else {
@@ -640,14 +589,14 @@ fun ModernTransactionCard(
                 }
                 Text(
                     text = subtitleText,
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = TextTertiary,
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             // Right Column: Amount & Payment Pill
             Column(
@@ -656,17 +605,17 @@ fun ModernTransactionCard(
             ) {
                 Text(
                     text = amount,
-                    fontSize = 15.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = amountColor,
                     maxLines = 1
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
-                        .background(SlateCardElevated)
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                        .background(Background)
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Text(
                         text = cleanPayment,

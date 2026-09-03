@@ -21,7 +21,7 @@ fun PlaceholderScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.linearGradient(listOf(DarkBackground1, DarkBackground2, DarkBackground3)))
+            .background(Brush.linearGradient(listOf(Background, Background, Background)))
     ) {
         Box(modifier = Modifier.fillMaxSize().padding(bottom = 80.dp), contentAlignment = Alignment.Center) {
             Text(title, color = TextPrimary, fontSize = 24.sp, fontWeight = FontWeight.Bold)

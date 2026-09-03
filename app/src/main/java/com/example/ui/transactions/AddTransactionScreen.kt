@@ -57,18 +57,18 @@ fun AddTransactionScreen(
 
     val expenseCategories = remember {
         listOf(
-            CategoryItem("Food", "🍔", FoodColor),
-            CategoryItem("Transport", "🚕", TransportColor),
-            CategoryItem("Shopping", "🛍️", ShoppingColor),
-            CategoryItem("Bills", "📄", BillsColor),
-            CategoryItem("Health", "⚕️", HealthColor),
-            CategoryItem("Entertainment", "🍿", EntertainmentColor),
-            CategoryItem("Education", "📚", EducationColor),
+            CategoryItem("Food", "🍔", CatFood),
+            CategoryItem("Transport", "🚕", CatTransport),
+            CategoryItem("Shopping", "🛍️", CatShopping),
+            CategoryItem("Bills", "📄", CatBills),
+            CategoryItem("Health", "⚕️", CatHealth),
+            CategoryItem("Entertainment", "🍿", CatEntertainment),
+            CategoryItem("Education", "📚", CatEducation),
             CategoryItem("Groceries", "🛒", Color(0xFF10B981)),
             CategoryItem("Travel", "✈️", Color(0xFF38BDF8)),
             CategoryItem("Personal Care", "💅", Color(0xFFF472B6)),
             CategoryItem("Utilities", "⚡", Color(0xFFFBBF24)),
-            CategoryItem("Others", "💸", OthersColor)
+            CategoryItem("Others", "💸", CatOthers)
         )
     }
 
@@ -84,7 +84,7 @@ fun AddTransactionScreen(
             CategoryItem("Refund", "🔄", Color(0xFF6366F1)),
             CategoryItem("Cashback", "💳", Color(0xFF059669)),
             CategoryItem("Gift", "🎀", Color(0xFFF43F5E)),
-            CategoryItem("Others", "💵", OthersColor)
+            CategoryItem("Others", "💵", CatOthers)
         )
     }
 
@@ -98,9 +98,9 @@ fun AddTransactionScreen(
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        DarkBackground1,
-                        DarkBackground2,
-                        DarkBackground1
+                        Background,
+                        Background,
+                        Background
                     )
                 )
             )
@@ -123,8 +123,8 @@ fun AddTransactionScreen(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(SlateCardElevated)
-                        .border(1.dp, GlassCardBorder, CircleShape)
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, CircleShape)
                         .clickable(onClick = onNavigateBack),
                     contentAlignment = Alignment.Center
                 ) {
@@ -158,8 +158,8 @@ fun AddTransactionScreen(
                         .fillMaxWidth()
                         .height(60.dp)
                         .clip(RoundedCornerShape(18.dp))
-                        .background(SlateCardSurface)
-                        .border(1.dp, GlassCardBorder, RoundedCornerShape(18.dp))
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, RoundedCornerShape(18.dp))
                         .padding(4.dp)
                 ) {
                     Row(modifier = Modifier.fillMaxSize()) {
@@ -191,7 +191,7 @@ fun AddTransactionScreen(
                                     modifier = Modifier
                                         .size(28.dp)
                                         .clip(CircleShape)
-                                        .background(if (isExpense) ExpenseRed.copy(alpha = 0.25f) else SlateCardElevated),
+                                        .background(if (isExpense) ExpenseRed.copy(alpha = 0.25f) else Color.White),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
@@ -228,7 +228,7 @@ fun AddTransactionScreen(
                                 .background(if (!isExpense) IncomeGreenBg else Color.Transparent)
                                 .border(
                                     1.dp,
-                                    if (!isExpense) PrimaryEmerald.copy(alpha = 0.5f) else Color.Transparent,
+                                    if (!isExpense) PrimaryTeal.copy(alpha = 0.5f) else Color.Transparent,
                                     RoundedCornerShape(14.dp)
                                 )
                                 .clickable {
@@ -247,7 +247,7 @@ fun AddTransactionScreen(
                                     modifier = Modifier
                                         .size(28.dp)
                                         .clip(CircleShape)
-                                        .background(if (!isExpense) IncomeGreen.copy(alpha = 0.25f) else SlateCardElevated),
+                                        .background(if (!isExpense) IncomeGreen.copy(alpha = 0.25f) else Color.White),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
@@ -282,8 +282,8 @@ fun AddTransactionScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(20.dp))
-                        .background(SlateCardSurface)
-                        .border(1.dp, GlassCardBorder, RoundedCornerShape(20.dp))
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, RoundedCornerShape(20.dp))
                         .padding(18.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -293,7 +293,7 @@ fun AddTransactionScreen(
                             fontSize = 11.sp,
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 1.sp,
-                            color = if (isExpense) ExpenseRed.copy(alpha = 0.9f) else PrimaryEmerald.copy(alpha = 0.9f)
+                            color = if (isExpense) ExpenseRed.copy(alpha = 0.9f) else PrimaryTeal.copy(alpha = 0.9f)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -368,7 +368,7 @@ fun AddTransactionScreen(
                         )
                         Text(
                             text = selectedCategory,
-                            color = if (isExpense) ExpenseRed else PrimaryEmerald,
+                            color = if (isExpense) ExpenseRed else PrimaryTeal,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -402,10 +402,10 @@ fun AddTransactionScreen(
                                                 .weight(1f)
                                                 .scale(itemScale)
                                                 .clip(RoundedCornerShape(14.dp))
-                                                .background(if (isSelected) cat.color.copy(alpha = 0.22f) else SlateCardSurface)
+                                                .background(if (isSelected) cat.color.copy(alpha = 0.22f) else Color.White)
                                                 .border(
                                                     1.dp,
-                                                    if (isSelected) cat.color else GlassCardBorder,
+                                                    if (isSelected) cat.color else DividerColor,
                                                     RoundedCornerShape(14.dp)
                                                 )
                                                 .clickable(
@@ -455,10 +455,10 @@ fun AddTransactionScreen(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(if (isSelected) PrimaryEmerald.copy(alpha = 0.2f) else SlateCardElevated)
+                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
                                     .border(
                                         1.dp,
-                                        if (isSelected) PrimaryEmerald else GlassCardBorder,
+                                        if (isSelected) PrimaryTeal else DividerColor,
                                         RoundedCornerShape(12.dp)
                                     )
                                     .clickable { selectedPayment = pay }
@@ -467,7 +467,7 @@ fun AddTransactionScreen(
                             ) {
                                 Text(
                                     text = pay,
-                                    color = if (isSelected) PrimaryEmerald else TextSecondary,
+                                    color = if (isSelected) PrimaryTeal else TextSecondary,
                                     fontSize = 12.5.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -495,7 +495,7 @@ fun AddTransactionScreen(
                         )
                     },
                     enabled = isValid,
-                    gradientColors = if (isExpense) listOf(ExpenseRed, Color(0xFFE11D48)) else listOf(PrimaryGradientStart, PrimaryGradientEnd)
+                    gradientColors = if (isExpense) listOf(ExpenseRed, Color(0xFFE11D48)) else listOf(PrimaryTeal, PrimaryTealDark)
                 )
             }
         }

@@ -8,23 +8,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Savings
-import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.BuildConfig
-import com.example.ui.components.GradientButton
 import com.example.ui.theme.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -60,145 +53,119 @@ fun LoginScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        DarkBackground1,
-                        DarkBackground2,
-                        DarkBackground1
-                    )
-                )
-            )
+            .background(Background)
             .padding(24.dp),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Custom Ribbon Logo
+        com.example.ui.components.SpendWiseLogo(modifier = Modifier.size(120.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Spend",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
+            Text(
+                text = "Wise",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryTeal
+            )
+        }
+        Text(
+            text = "Welcome to your\nfinancial vault",
+            fontSize = 16.sp,
+            color = TextSecondary,
+            modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+
+        if (authState is AuthState.Error) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = (authState as AuthState.Error).message,
+                color = ExpenseRed,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            onClick = {
+                val gsoBuilder = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestProfile()
+                    .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
+                    
+                if (BuildConfig.GOOGLE_CLIENT_ID != "your_google_client_id_here") {
+                    gsoBuilder.requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+                }
+
+                val googleSignInClient = GoogleSignIn.getClient(context, gsoBuilder.build())
+                launcher.launch(googleSignInClient.signInIntent)
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 16.dp, shape = RoundedCornerShape(28.dp), spotColor = Color(0xFF000000))
-                .clip(RoundedCornerShape(28.dp))
-                .background(SlateCardSurface)
-                .border(1.dp, GlassCardBorder, RoundedCornerShape(28.dp))
-                .padding(28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryTeal
+            ),
+            shape = RoundedCornerShape(28.dp),
+            enabled = authState !is AuthState.Loading
         ) {
-            // App Brand Logo Emblem
+            // Placeholder for Google icon (G)
             Box(
-                modifier = Modifier.size(72.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(Color.White, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(Color(0xFF0F261F), Color(0xFF103A2E), Color(0xFF0D1B2A))
-                            )
-                        )
-                        .border(
-                            1.5.dp,
-                            Brush.linearGradient(listOf(PrimaryEmerald, PrimaryTeal)),
-                            RoundedCornerShape(20.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Savings,
-                        contentDescription = "SpendWise",
-                        tint = PrimaryEmerald,
-                        modifier = Modifier.size(34.dp)
-                    )
-                }
-
-                // Sparkle Accent
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 4.dp, y = (-4).dp)
-                        .size(20.dp)
-                        .clip(CircleShape)
-                        .background(Brush.linearGradient(listOf(Color(0xFFFDE047), Color(0xFFEAB308)))),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.AutoAwesome,
-                        contentDescription = null,
-                        tint = Color(0xFF0F172A),
-                        modifier = Modifier.size(12.dp)
-                    )
-                }
+                Text("G", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 14.sp)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Spend",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
-                )
-                Text(
-                    text = "Wise",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = PrimaryEmerald
-                )
-            }
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Welcome to your financial vault",
-                fontSize = 13.sp,
-                color = TextSecondary,
-                modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
-            )
-
-            if (authState is AuthState.Error) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = (authState as AuthState.Error).message,
-                    color = ExpenseRed,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            GradientButton(
                 text = if (authState is AuthState.Loading) "Authenticating..." else "Sign in with Google",
-                onClick = {
-                    val gsoBuilder = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestProfile()
-                        .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
-                        
-                    // Only request ID token if we have a valid non-placeholder client ID
-                    if (BuildConfig.GOOGLE_CLIENT_ID != "your_google_client_id_here") {
-                        gsoBuilder.requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
-                    }
-
-                    val googleSignInClient = GoogleSignIn.getClient(context, gsoBuilder.build())
-                    launcher.launch(googleSignInClient.signInIntent)
-                },
-                enabled = authState !is AuthState.Loading
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
             )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            TextButton(
-                onClick = { viewModel.loginTestMode() },
-                enabled = authState !is AuthState.Loading
-            ) {
-                Text(
-                    text = "Continue as Guest (Test Mode)",
-                    color = TextSecondary,
-                    fontSize = 14.sp
-                )
-            }
         }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        OutlinedButton(
+            onClick = { viewModel.loginTestMode() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = PrimaryTeal
+            ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, PrimaryTeal),
+            shape = RoundedCornerShape(28.dp),
+            enabled = authState !is AuthState.Loading
+        ) {
+            Text(
+                text = "Continue as Guest\n(Test Mode)",
+                color = PrimaryTeal,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

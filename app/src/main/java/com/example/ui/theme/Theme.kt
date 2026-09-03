@@ -2,37 +2,35 @@ package com.example.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryEmerald,
-    onPrimary = Color.Black,
-    primaryContainer = PrimaryEmerald.copy(alpha = 0.2f),
-    onPrimaryContainer = PrimaryEmerald,
+private val LightColorScheme = lightColorScheme(
+    primary = PrimaryTeal,
+    onPrimary = Color.White,
+    primaryContainer = SecondaryTeal,
+    onPrimaryContainer = PrimaryTealDark,
     secondary = PrimaryTeal,
-    onSecondary = Color.Black,
-    secondaryContainer = PrimaryTeal.copy(alpha = 0.2f),
-    onSecondaryContainer = PrimaryTeal,
-    tertiary = AccentIndigo,
-    background = DarkBackground1,
+    onSecondary = Color.White,
+    background = Background,
     onBackground = TextPrimary,
-    surface = SlateCardSurface,
+    surface = Surface,
     onSurface = TextPrimary,
-    surfaceVariant = SlateCardElevated,
+    surfaceVariant = Surface, // For cards
     onSurfaceVariant = TextSecondary,
-    outline = GlassCardBorder,
+    outline = DividerColor,
     error = ExpenseRed,
     onError = Color.White
 )
 
 @Composable
 fun SpendWiseTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean = false, // Force light theme based on design
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = DarkColorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
         content = content
     )

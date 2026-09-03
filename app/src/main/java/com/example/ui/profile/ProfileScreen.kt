@@ -83,7 +83,7 @@ fun ProfileScreen(
                     Text("Cancel", color = TextSecondary)
                 }
             },
-            containerColor = SlateCardElevated,
+            containerColor = Color.White,
             shape = RoundedCornerShape(20.dp),
             titleContentColor = TextPrimary,
             textContentColor = TextSecondary
@@ -96,9 +96,9 @@ fun ProfileScreen(
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        DarkBackground1,
-                        DarkBackground2,
-                        DarkBackground1
+                        Background,
+                        Background,
+                        Background
                     )
                 )
             )
@@ -140,8 +140,8 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .shadow(elevation = 12.dp, shape = RoundedCornerShape(24.dp), spotColor = Color(0xFF000000))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(SlateCardSurface)
-                        .border(1.dp, GlassCardBorder, RoundedCornerShape(24.dp))
+                        .background(Color.White)
+                        .border(1.dp, DividerColor, RoundedCornerShape(24.dp))
                         .padding(24.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -153,10 +153,10 @@ fun ProfileScreen(
                                 .clip(CircleShape)
                                 .background(
                                     Brush.linearGradient(
-                                        listOf(PrimaryEmerald, PrimaryTeal)
+                                        listOf(PrimaryTeal, PrimaryTeal)
                                     )
                                 )
-                                .border(2.dp, GlassCardBorder, CircleShape),
+                                .border(2.dp, DividerColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
@@ -189,7 +189,7 @@ fun ProfileScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(PrimaryEmerald.copy(alpha = 0.15f))
+                                .background(PrimaryTeal.copy(alpha = 0.15f))
                                 .padding(horizontal = 12.dp, vertical = 5.dp)
                         ) {
                             Row(
@@ -199,7 +199,7 @@ fun ProfileScreen(
                                 Text(text = "🔐", fontSize = 11.sp)
                                 Text(
                                     text = "Secure Local Vault",
-                                    color = PrimaryEmerald,
+                                    color = PrimaryTeal,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -229,8 +229,8 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                 .padding(16.dp)
                         ) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -250,8 +250,8 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                 .padding(16.dp)
                         ) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -261,7 +261,7 @@ fun ProfileScreen(
                                     format.format(balance),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (balance >= 0) PrimaryEmerald else ExpenseRed,
+                                    color = if (balance >= 0) PrimaryTeal else ExpenseRed,
                                     maxLines = 1,
                                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                 )
@@ -278,8 +278,8 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                 .padding(16.dp)
                         ) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -301,8 +301,8 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(SlateCardSurface)
-                                .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
                                 .padding(16.dp)
                         ) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {

@@ -2,45 +2,74 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Luxury Fintech Obsidian & Deep Slate Canvas
-val DarkBackground1 = Color(0xFF090D16) // Deepest Obsidian
-val DarkBackground2 = Color(0xFF0F172A) // Rich Slate Navy
-val DarkBackground3 = Color(0xFF131D31) // Deep Indigo-Slate
+// Light Theme Colors
+val Background = Color(0xFFF9FAFB) // Very light gray/white background
+val Surface = Color(0xFFFFFFFF) // Pure white cards
 
-// Glassmorphic Card Surfaces & Borders
-val GlassCardBackground = Color(0x1AFFFFFF) // rgba(255, 255, 255, 0.10)
-val GlassCardBackground5 = Color(0x0DFFFFFF) // rgba(255, 255, 255, 0.05)
-val GlassCardBackgroundLight = Color(0x24FFFFFF) // rgba(255, 255, 255, 0.14)
-val SlateCardSurface = Color(0xFF161F30) // Solid sleek slate card
-val SlateCardElevated = Color(0xFF1E293B) // Elevated card surface
-val GlassCardBorder = Color(0x26FFFFFF) // Crisp translucent border
-val GlassCardBorder10 = Color(0x14FFFFFF) // Subtle border
+val PrimaryTeal = Color(0xFF14B8A6) // Main Teal color for buttons, active states
+val PrimaryTealDark = Color(0xFF0F766E) // Darker teal for text on light teal bg
+val SecondaryTeal = Color(0xFFE6F7F5) // Very light teal background
 
-// Modern Vibrant Accents (Emerald & Electric Teal)
-val PrimaryEmerald = Color(0xFF10B981)
-val PrimaryTeal = Color(0xFF06B6D4)
-val PrimaryGradientStart = Color(0xFF10B981)
-val PrimaryGradientEnd = Color(0xFF06B6D4)
-val AccentCyan = Color(0xFF38BDF8)
-val AccentIndigo = Color(0xFF6366F1)
-val AccentPurple = Color(0xFF8B5CF6)
+// Text Colors
+val TextPrimary = Color(0xFF111827) // Dark gray almost black
+val TextSecondary = Color(0xFF6B7280) // Medium gray
+val TextTertiary = Color(0xFF9CA3AF) // Light gray
+val TextWhite = Color(0xFFFFFFFF)
 
-// Financial Status Colors
-val TextPrimary = Color(0xFFF8FAFC)
-val TextSecondary = Color(0xFF94A3B8)
-val TextTertiary = Color(0xFF64748B)
+val DividerColor = Color(0xFFE5E7EB) // Light gray for borders and dividers
 
-val ExpenseRed = Color(0xFFF43F5E) // Vibrant Coral Rose
-val ExpenseRedBg = Color(0x26F43F5E) // Soft Coral Tint
-val IncomeGreen = Color(0xFF10B981) // Vibrant Emerald Green
-val IncomeGreenBg = Color(0x2610B981) // Soft Emerald Tint
+// Status Colors
+val ExpenseRed = Color(0xFFEF4444) // Vibrant Red
+val ExpenseRedBg = Color(0xFFFEE2E2) // Soft Red Tint
+val IncomeGreen = Color(0xFF10B981) // Vibrant Green
+val IncomeGreenBg = Color(0xFFD1FAE5) // Soft Green Tint
 
-// Category Colors
-val FoodColor = Color(0xFFF97316) // Warm Orange
-val TransportColor = Color(0xFF06B6D4) // Electric Teal
-val ShoppingColor = Color(0xFFEC4899) // Hot Pink
-val BillsColor = Color(0xFF8B5CF6) // Royal Purple
-val EntertainmentColor = Color(0xFFF59E0B) // Amber
-val HealthColor = Color(0xFF14B8A6) // Teal
-val EducationColor = Color(0xFF3B82F6) // Blue
-val OthersColor = Color(0xFF64748B) // Slate
+// Category Colors (For Add Transaction screen)
+val CatFood = Color(0xFFF97316)
+val CatFoodBg = Color(0xFFFFEDD5)
+val CatTransport = Color(0xFF0EA5E9)
+val CatTransportBg = Color(0xFFE0F2FE)
+val CatShopping = Color(0xFFEC4899)
+val CatShoppingBg = Color(0xFFFCE7F3)
+val CatBills = Color(0xFF8B5CF6)
+val CatBillsBg = Color(0xFFEDE9FE)
+val CatEntertainment = Color(0xFFEAB308)
+val CatEntertainmentBg = Color(0xFFFEF9C3)
+val CatHealth = Color(0xFF14B8A6)
+val CatHealthBg = Color(0xFFCCFBF1)
+val CatEducation = Color(0xFF3B82F6)
+val CatEducationBg = Color(0xFFDBEAFE)
+val CatGroceries = Color(0xFF10B981)
+val CatGroceriesBg = Color(0xFFD1FAE5)
+
+// Income Category Colors
+val CatSalary = Color(0xFF10B981)
+val CatSalaryBg = Color(0xFFD1FAE5)
+val CatFreelance = Color(0xFF0EA5E9)
+val CatFreelanceBg = Color(0xFFE0F2FE)
+val CatBusiness = Color(0xFF8B5CF6)
+val CatBusinessBg = Color(0xFFEDE9FE)
+val CatInvestments = Color(0xFFF59E0B)
+val CatInvestmentsBg = Color(0xFFFEF3C7)
+val CatBonus = Color(0xFFF43F5E)
+val CatBonusBg = Color(0xFFFFE4E6)
+val CatDividends = Color(0xFFEC4899)
+val CatDividendsBg = Color(0xFFFCE7F3)
+val CatRental = Color(0xFF14B8A6)
+val CatRentalBg = Color(0xFFCCFBF1)
+val CatRefund = Color(0xFF3B82F6)
+val CatRefundBg = Color(0xFFDBEAFE)
+val CatCashback = Color(0xFFF97316)
+val CatCashbackBg = Color(0xFFFFEDD5)
+val CatGift = Color(0xFFEF4444)
+val CatGiftBg = Color(0xFFFEE2E2)
+val CatOthers = Color(0xFF6B7280)
+val CatOthersBg = Color(0xFFF3F4F6)
+
+// Splash screen dark background colors
+val SplashDarkTop = Color(0xFF0B192C)
+val SplashDarkBottom = Color(0xFF07101C)
+val SplashWaveColor = Color(0xFF11223A)
+
+
+
