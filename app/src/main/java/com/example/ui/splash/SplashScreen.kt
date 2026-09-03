@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
+    isDarkTheme: Boolean,
     onAnimationComplete: () -> Unit
 ) {
     LaunchedEffect(Unit) {
@@ -24,14 +25,20 @@ fun SplashScreen(
         onAnimationComplete()
     }
 
+    val topBg = if (isDarkTheme) SplashDarkTop else SplashLightTop
+    val bottomBg = if (isDarkTheme) SplashDarkBottom else SplashLightBottom
+    val waveBg = if (isDarkTheme) SplashWaveColor else SplashLightWaveColor
+    val textColor = if (isDarkTheme) Color.White else TextPrimary
+    val subtitleColor = if (isDarkTheme) Color.LightGray else TextSecondary
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        SplashDarkTop,
-                        SplashDarkBottom
+                        topBg,
+                        bottomBg
                     )
                 )
             ),
@@ -45,7 +52,7 @@ fun SplashScreen(
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color.Transparent, SplashWaveColor)
+                        listOf(Color.Transparent, waveBg)
                     ),
                     shape = RoundedCornerShape(topStart = 200.dp, topEnd = 100.dp)
                 )
@@ -58,7 +65,7 @@ fun SplashScreen(
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color.Transparent, SplashDarkBottom)
+                        listOf(Color.Transparent, bottomBg)
                     ),
                     shape = RoundedCornerShape(topStart = 100.dp, topEnd = 200.dp)
                 )
@@ -83,7 +90,7 @@ fun SplashScreen(
                     text = "Spend",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = textColor,
                     letterSpacing = 0.5.sp
                 )
                 Text(
@@ -101,7 +108,7 @@ fun SplashScreen(
                 text = "Welcome to your financial vault",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.LightGray
+                color = subtitleColor
             )
         }
     }

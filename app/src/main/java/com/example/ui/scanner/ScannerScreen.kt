@@ -43,6 +43,7 @@ import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.FlashOff
 import androidx.compose.material.icons.outlined.FlashOn
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -254,7 +255,7 @@ fun ScannerScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // =========================================================================
         // FULL SCREEN LIVE CAMERA VIEW (When in live mode and result is not extracted yet)
@@ -365,7 +366,7 @@ fun ScannerScreen(
                             .padding(top = 70.dp)
                             .clip(RoundedCornerShape(20.dp))
                             .background(Color.Black.copy(alpha = 0.65f))
-                            .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Row(
@@ -380,7 +381,7 @@ fun ScannerScreen(
                             )
                             Text(
                                 text = "Align full bill or receipt inside frame",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -402,14 +403,14 @@ fun ScannerScreen(
                                 .size(44.dp)
                                 .clip(CircleShape)
                                 .background(Color.Black.copy(alpha = 0.6f))
-                                .border(1.dp, Color.White.copy(alpha = 0.25f), CircleShape)
+                                .border(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.25f), CircleShape)
                                 .clickable(onClick = onNavigateBack),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White,
+                                tint = MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -424,7 +425,7 @@ fun ScannerScreen(
                         ) {
                             Text(
                                 text = "Scan Bill",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -436,7 +437,7 @@ fun ScannerScreen(
                                 .size(44.dp)
                                 .clip(CircleShape)
                                 .background(if (isFlashOn) PrimaryTeal else Color.Black.copy(alpha = 0.6f))
-                                .border(1.dp, Color.White.copy(alpha = 0.25f), CircleShape)
+                                .border(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.25f), CircleShape)
                                 .clickable {
                                     val next = !isFlashOn
                                     isFlashOn = next
@@ -447,7 +448,7 @@ fun ScannerScreen(
                             Icon(
                                 imageVector = if (isFlashOn) Icons.Outlined.FlashOn else Icons.Outlined.FlashOff,
                                 contentDescription = "Toggle Flash",
-                                tint = if (isFlashOn) Color.Black else Color.White,
+                                tint = if (isFlashOn) Color.Black else MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -468,7 +469,7 @@ fun ScannerScreen(
                                 .size(50.dp)
                                 .clip(CircleShape)
                                 .background(Color.Black.copy(alpha = 0.65f))
-                                .border(1.dp, Color.White.copy(alpha = 0.3f), CircleShape)
+                                .border(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.3f), CircleShape)
                                 .clickable {
                                     scanMode = ScanMode.GALLERY_PREVIEW
                                     capturedBitmap = null
@@ -480,7 +481,7 @@ fun ScannerScreen(
                             Icon(
                                 imageVector = Icons.Default.PhotoLibrary,
                                 contentDescription = "Gallery",
-                                tint = Color.White,
+                                tint = MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -499,7 +500,7 @@ fun ScannerScreen(
                                 .size(80.dp)
                                 .scale(shutterScale)
                                 .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.2f))
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.2f))
                                 .border(3.5.dp, PrimaryTeal, CircleShape)
                                 .padding(6.dp)
                                 .clip(CircleShape)
@@ -541,8 +542,8 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .size(70.dp)
                                 .clip(CircleShape)
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, CircleShape),
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -555,14 +556,14 @@ fun ScannerScreen(
 
                         Text(
                             text = "Camera Access Needed",
-                            color = TextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
 
                         Text(
                             text = "Grant camera permission to scan bills and receipts directly in full screen.",
-                            color = TextSecondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center
                         )
@@ -608,15 +609,15 @@ fun ScannerScreen(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Color.White)
-                            .border(1.dp, DividerColor, CircleShape)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                             .clickable(onClick = onNavigateBack),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
-                            tint = TextPrimary,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -629,7 +630,7 @@ fun ScannerScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = "AI Bill Scanner",
-                                color = TextPrimary,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1
@@ -655,8 +656,8 @@ fun ScannerScreen(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White)
-                            .border(1.dp, DividerColor, RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
                             .clickable {
                                 scanMode = ScanMode.CAMERA_LIVE
                                 capturedBitmap = null
@@ -682,7 +683,7 @@ fun ScannerScreen(
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Camera",
-                                color = TextPrimary,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -705,7 +706,7 @@ fun ScannerScreen(
                                 .fillMaxWidth()
                                 .height(160.dp)
                                 .clip(RoundedCornerShape(18.dp))
-                                .background(Color.White)
+                                .background(MaterialTheme.colorScheme.surface)
                                 .border(1.dp, PrimaryTeal.copy(alpha = 0.4f), RoundedCornerShape(18.dp)),
                             contentAlignment = Alignment.Center
                         ) {
@@ -750,7 +751,7 @@ fun ScannerScreen(
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
                                     text = "Bill Captured",
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.surface,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -766,7 +767,7 @@ fun ScannerScreen(
                                 .fillMaxWidth()
                                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0xFF000000))
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White)
+                                .background(MaterialTheme.colorScheme.surface)
                                 .border(1.dp, PrimaryTeal.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
                                 .padding(16.dp)
                         ) {
@@ -786,7 +787,7 @@ fun ScannerScreen(
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Text(
                                             text = "Scanned Details",
-                                            color = TextPrimary,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 15.sp
                                         )
@@ -807,11 +808,11 @@ fun ScannerScreen(
                                     }
                                 }
 
-                                Divider(color = DividerColor)
+                                Divider(color = MaterialTheme.colorScheme.outline)
 
                                 // Editable Amount Field
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text("Total Amount Paid", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                    Text("Total Amount Paid", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                                     OutlinedTextField(
                                         value = editableAmount,
                                         onValueChange = { editableAmount = it },
@@ -834,9 +835,9 @@ fun ScannerScreen(
                                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedBorderColor = PrimaryTeal,
-                                            unfocusedBorderColor = DividerColor,
-                                            focusedContainerColor = Color.White,
-                                            unfocusedContainerColor = Color.White,
+                                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                                             cursorColor = PrimaryTeal
                                         ),
                                         shape = RoundedCornerShape(12.dp)
@@ -845,13 +846,13 @@ fun ScannerScreen(
 
                                 // Editable Merchant / Provider
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text("Merchant / Provider", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                    Text("Merchant / Provider", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                                     OutlinedTextField(
                                         value = editableMerchant,
                                         onValueChange = { editableMerchant = it },
                                         modifier = Modifier.fillMaxWidth(),
                                         textStyle = MaterialTheme.typography.bodyLarge.copy(
-                                            color = TextPrimary,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 14.sp
                                         ),
@@ -866,9 +867,9 @@ fun ScannerScreen(
                                         placeholder = { Text("e.g. Indane Gas, Amazon Pay", color = TextTertiary) },
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedBorderColor = PrimaryTeal,
-                                            unfocusedBorderColor = DividerColor,
-                                            focusedContainerColor = Color.White,
-                                            unfocusedContainerColor = Color.White,
+                                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                                             cursorColor = PrimaryTeal
                                         ),
                                         shape = RoundedCornerShape(12.dp)
@@ -877,17 +878,17 @@ fun ScannerScreen(
 
                                 // Category Selector Chips
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text("Category", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                    Text("Category", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                                     LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         items(categories) { cat ->
                                             val isSelected = editableCategory.equals(cat, ignoreCase = true)
                                             Box(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
+                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surface)
                                                     .border(
                                                         1.dp,
-                                                        if (isSelected) PrimaryTeal else DividerColor,
+                                                        if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.outline,
                                                         RoundedCornerShape(10.dp)
                                                     )
                                                     .clickable { editableCategory = cat }
@@ -895,7 +896,7 @@ fun ScannerScreen(
                                             ) {
                                                 Text(
                                                     text = cat,
-                                                    color = if (isSelected) PrimaryTeal else TextSecondary,
+                                                    color = if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.onSurfaceVariant,
                                                     fontSize = 11.5.sp,
                                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                                 )
@@ -906,17 +907,17 @@ fun ScannerScreen(
 
                                 // Payment Method Selector Chips
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text("Payment Method", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                    Text("Payment Method", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                                     LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         items(paymentMethods) { method ->
                                             val isSelected = editablePaymentMethod.contains(method, ignoreCase = true)
                                             Box(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
+                                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surface)
                                                     .border(
                                                         1.dp,
-                                                        if (isSelected) PrimaryTeal else DividerColor,
+                                                        if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.outline,
                                                         RoundedCornerShape(10.dp)
                                                     )
                                                     .clickable { editablePaymentMethod = method }
@@ -924,7 +925,7 @@ fun ScannerScreen(
                                             ) {
                                                 Text(
                                                     text = method,
-                                                    color = if (isSelected) PrimaryTeal else TextSecondary,
+                                                    color = if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.onSurfaceVariant,
                                                     fontSize = 11.5.sp,
                                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                                 )
@@ -939,7 +940,7 @@ fun ScannerScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text("Ref ID", color = TextSecondary, fontSize = 11.sp)
+                                        Text("Ref ID", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                                         Text(
                                             text = data.transactionId,
                                             color = TextTertiary,
@@ -984,7 +985,7 @@ fun ScannerScreen(
                                 Icon(
                                     imageVector = Icons.Default.CameraAlt,
                                     contentDescription = null,
-                                    tint = TextSecondary,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(16.dp)
                                 )
                             },
@@ -996,8 +997,8 @@ fun ScannerScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, RoundedCornerShape(20.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
                                 .padding(24.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -1009,7 +1010,7 @@ fun ScannerScreen(
                                     modifier = Modifier
                                         .size(60.dp)
                                         .clip(CircleShape)
-                                        .background(Color.White),
+                                        .background(MaterialTheme.colorScheme.surface),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
@@ -1022,14 +1023,14 @@ fun ScannerScreen(
 
                                 Text(
                                     text = "Choose Receipt Screenshot",
-                                    color = TextPrimary,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold
                                 )
 
                                 Text(
                                     text = "Select any payment screenshot, PDF receipt image, or bill photo from your device.",
-                                    color = TextSecondary,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.5.sp,
                                     textAlign = TextAlign.Center
                                 )
@@ -1132,7 +1133,7 @@ fun ScannerScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "Analyzing Receipt...",
-                            color = TextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold
                         )

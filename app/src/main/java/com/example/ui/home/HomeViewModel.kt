@@ -30,6 +30,18 @@ class HomeViewModel(
     val totalBalance = combine(totalIncome, totalExpense) { inc, exp -> inc - exp }
         .stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
+    val themeMode = dataStoreManager.themeMode
+        .stateIn(viewModelScope, SharingStarted.Lazily, "system")
+
+    val userPhotoUrl = dataStoreManager.userPhotoUrl
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+
+    fun setThemeMode(mode: String) {
+        viewModelScope.launch {
+            dataStoreManager.setThemeMode(mode)
+        }
+    }
+
     val monthlyBudget = dataStoreManager.monthlyBudget
         .stateIn(viewModelScope, SharingStarted.Lazily, 0f)
 

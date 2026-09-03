@@ -24,13 +24,33 @@ private val LightColorScheme = lightColorScheme(
     onError = Color.White
 )
 
+private val DarkColorScheme = darkColorScheme(
+    primary = PrimaryTeal,
+    onPrimary = Color.White,
+    primaryContainer = PrimaryTealDark,
+    onPrimaryContainer = SecondaryTeal,
+    secondary = PrimaryTeal,
+    onSecondary = Color.White,
+    background = BackgroundDark,
+    onBackground = TextPrimaryDark,
+    surface = SurfaceDark,
+    onSurface = TextPrimaryDark,
+    surfaceVariant = SurfaceDark,
+    onSurfaceVariant = TextSecondaryDark,
+    outline = DividerColorDark,
+    error = ExpenseRed,
+    onError = Color.White
+)
+
 @Composable
 fun SpendWiseTheme(
-    darkTheme: Boolean = false, // Force light theme based on design
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    
     MaterialTheme(
-        colorScheme = LightColorScheme,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

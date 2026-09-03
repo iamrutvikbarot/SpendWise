@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,20 +81,13 @@ fun TransactionDetailDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(28.dp))
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            Color(0xFF1E293B),
-                            Color(0xFF0F172A)
-                        )
-                    )
-                )
+                .background(MaterialTheme.colorScheme.surface)
                 .border(
                     width = 1.2.dp,
                     brush = Brush.verticalGradient(
                         listOf(
                             if (isExpense) ExpenseRed.copy(alpha = 0.5f) else PrimaryTeal.copy(alpha = 0.5f),
-                            DividerColor
+                            MaterialTheme.colorScheme.outline
                         )
                     ),
                     shape = RoundedCornerShape(28.dp)
@@ -114,22 +108,22 @@ fun TransactionDetailDialog(
                         text = "Transaction Details",
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Box(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape)
-                            .background(Color.White)
-                            .border(1.dp, DividerColor, CircleShape)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                             .clickable(onClick = onDismiss),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = TextSecondary,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -140,10 +134,10 @@ fun TransactionDetailDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(20.dp))
-                        .background(if (isExpense) ExpenseRedBg else IncomeGreenBg)
+                        .background(if (isExpense) ExpenseRed.copy(alpha = 0.1f) else IncomeGreen.copy(alpha = 0.1f))
                         .border(
                             1.dp,
-                            if (isExpense) ExpenseRed.copy(alpha = 0.35f) else PrimaryTeal.copy(alpha = 0.35f),
+                            if (isExpense) ExpenseRed.copy(alpha = 0.2f) else IncomeGreen.copy(alpha = 0.2f),
                             RoundedCornerShape(20.dp)
                         )
                         .padding(18.dp),
@@ -187,7 +181,7 @@ fun TransactionDetailDialog(
                             text = transaction.title.ifBlank { transaction.category },
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = TextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -197,8 +191,8 @@ fun TransactionDetailDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(18.dp))
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, RoundedCornerShape(18.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(18.dp))
                         .padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -209,43 +203,43 @@ fun TransactionDetailDialog(
                         valueColor = catColor
                     )
 
-                    Divider(color = DividerColor, thickness = 0.8.dp)
+                    Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
 
                     // Payment Method Row
                     DetailRow(
                         label = "Payment Method",
                         value = transaction.paymentMethod.ifBlank { "UPI" },
-                        valueColor = TextPrimary
+                        valueColor = MaterialTheme.colorScheme.onSurface
                     )
 
-                    Divider(color = DividerColor, thickness = 0.8.dp)
+                    Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
 
                     // Date Row
                     DetailRow(
                         label = "Date",
                         value = fullDateFormat.format(Date(transaction.date)),
-                        valueColor = TextPrimary
+                        valueColor = MaterialTheme.colorScheme.onSurface
                     )
 
-                    Divider(color = DividerColor, thickness = 0.8.dp)
+                    Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
 
                     // Time Row
                     DetailRow(
                         label = "Time",
                         value = timeFormat.format(Date(transaction.date)),
-                        valueColor = TextSecondary
+                        valueColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     // Reference ID or Tx ID
                     if (!transaction.upiRefId.isNullOrBlank()) {
-                        Divider(color = DividerColor, thickness = 0.8.dp)
+                        Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
                         DetailRow(
                             label = "Ref / Tx ID",
                             value = transaction.upiRefId,
                             valueColor = TextTertiary
                         )
                     } else {
-                        Divider(color = DividerColor, thickness = 0.8.dp)
+                        Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
                         DetailRow(
                             label = "Record ID",
                             value = "#TXN-${transaction.id.toString().padStart(5, '0')}",
@@ -255,11 +249,11 @@ fun TransactionDetailDialog(
 
                     // Optional Note
                     if (!transaction.note.isNullOrBlank()) {
-                        Divider(color = DividerColor, thickness = 0.8.dp)
+                        Divider(color = MaterialTheme.colorScheme.outline, thickness = 0.8.dp)
                         DetailRow(
                             label = "Note",
                             value = transaction.note,
-                            valueColor = TextSecondary
+                            valueColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -272,11 +266,11 @@ fun TransactionDetailDialog(
                     ) {
                         Button(
                             onClick = { showDeleteConfirm = false },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
                             shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f).height(44.dp)
                         ) {
-                            Text("Cancel", color = TextSecondary, fontSize = 13.sp)
+                            Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                         }
 
                         Button(
@@ -288,7 +282,7 @@ fun TransactionDetailDialog(
                             shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1.2f).height(44.dp)
                         ) {
-                            Text("Confirm Delete", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text("Confirm Delete", color = MaterialTheme.colorScheme.surface, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                         }
                     }
                 } else {
@@ -315,12 +309,12 @@ fun TransactionDetailDialog(
 
                         Button(
                             onClick = onDismiss,
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, DividerColor),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f).height(44.dp)
                         ) {
-                            Text("Close", color = TextPrimary, fontWeight = FontWeight.Medium, fontSize = 13.sp)
+                            Text("Close", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Medium, fontSize = 13.sp)
                         }
                     }
                 }
@@ -333,7 +327,7 @@ fun TransactionDetailDialog(
 private fun DetailRow(
     label: String,
     value: String,
-    valueColor: Color = TextPrimary
+    valueColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -343,14 +337,18 @@ private fun DetailRow(
         Text(
             text = label,
             fontSize = 12.sp,
-            color = TextSecondary,
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(0.4f)
         )
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = value,
             fontSize = 13.sp,
             color = valueColor,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.weight(0.6f),
+            textAlign = androidx.compose.ui.text.style.TextAlign.End
         )
     }
 }

@@ -11,13 +11,28 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class DataStoreManager(private val context: Context) {
     companion object {
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         val USER_ID = intPreferencesKey("user_id")
+        val USER_PHOTO_URL = stringPreferencesKey("user_photo_url")
         val MONTHLY_BUDGET = floatPreferencesKey("monthly_budget")
+        val THEME_MODE = stringPreferencesKey("theme_mode") // "light", "dark", "system"
+    }
+
+    val themeMode: Flow<String> = context.dataStore.data
+        .map { preferences ->
+            preferences[THEME_MODE] ?: "system"
+        }
+
+    suspend fun setThemeMode(mode: String) {
+        context.dataStore.edit { preferences ->
+            preferences[THEME_MODE] = mode
+        }
     }
 
     val monthlyBudget: Flow<Float> = context.dataStore.data
@@ -41,10 +56,20 @@ class DataStoreManager(private val context: Context) {
             preferences[USER_ID]
         }
 
-    suspend fun saveLoginState(isLoggedIn: Boolean, userId: Int) {
+    val userPhotoUrl: Flow<String?> = context.dataStore.data
+        .map { preferences ->
+            preferences[USER_PHOTO_URL]
+        }
+
+    suspend fun saveLoginState(isLoggedIn: Boolean, userId: Int, photoUrl: String? = null) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = isLoggedIn
             preferences[USER_ID] = userId
+            if (photoUrl != null) {
+                preferences[USER_PHOTO_URL] = photoUrl
+            } else {
+                preferences.remove(USER_PHOTO_URL)
+            }
         }
     }
 
@@ -52,6 +77,7 @@ class DataStoreManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences.remove(IS_LOGGED_IN)
             preferences.remove(USER_ID)
+            preferences.remove(USER_PHOTO_URL)
         }
     }
 }

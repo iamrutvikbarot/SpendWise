@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -32,17 +33,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.border
+
 @Composable
 fun FrostedBottomBar(
     currentRoute: String,
     onNavigate: (String) -> Unit,
-    onQuickAdd: () -> Unit = {}
+    onQuickAdd: () -> Unit = {},
+    userPhotoUrl: String? = null
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(elevation = 16.dp, spotColor = Color(0x1A000000))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
             .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center
@@ -86,19 +94,55 @@ fun FrostedBottomBar(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add Transaction",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.size(28.dp)
                 )
             }
 
             // Profile Nav Item
-            DockTabItem(
-                iconSelected = Icons.Filled.Person,
-                iconUnselected = Icons.Outlined.Person,
-                label = "Profile",
-                isSelected = currentRoute == "profile",
-                onClick = { onNavigate("profile") }
-            )
+            if (userPhotoUrl != null) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { onNavigate("profile") }
+                        )
+                        .padding(horizontal = 24.dp, vertical = 4.dp)
+                ) {
+                    val tint by animateColorAsState(if (currentRoute == "profile") PrimaryTeal else MaterialTheme.colorScheme.onSurfaceVariant)
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .border(if (currentRoute == "profile") 2.dp else 0.dp, tint, CircleShape)
+                    ) {
+                        AsyncImage(
+                            model = userPhotoUrl,
+                            contentDescription = "Profile",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize().clip(CircleShape)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Profile",
+                        color = tint,
+                        fontSize = 11.sp,
+                        fontWeight = if (currentRoute == "profile") FontWeight.Bold else FontWeight.Medium
+                    )
+                }
+            } else {
+                DockTabItem(
+                    iconSelected = Icons.Filled.Person,
+                    iconUnselected = Icons.Outlined.Person,
+                    label = "Profile",
+                    isSelected = currentRoute == "profile",
+                    onClick = { onNavigate("profile") }
+                )
+            }
         }
     }
 }

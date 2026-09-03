@@ -7,73 +7,57 @@
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-M3-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
-<br />
-
-### 🚀 **Instant Direct Download**
-Click below to download the latest SpendWise APK directly to your Android device:
-
-[![Download APK](https://img.shields.io/badge/⬇️%20DOWNLOAD%20APP%20APK-DIRECT%20INSTALL-10B981?style=for-the-badge&labelColor=064E3B&logo=android&logoColor=white)](https://drive.usercontent.google.com/download?id=191f8uwKxBhJ180j6BYswhaPErgwwJcM5&export=download&confirm=t)
-
-*(Alternative Mirror Link: [Open on Google Drive](https://drive.usercontent.google.com/download?id=1PqOn_OHr2O9anTuUDM2Lkow3bGtY8yjN&export=download&confirm=t))*
-
----
-
 </div>
 
 ## 🌟 Overview
-
 **SpendWise** is a sleek, modern financial management application crafted with **Jetpack Compose** and **Material Design 3**. Designed with a deep frosted slate aesthetic, fluid animations, and real-time on-device processing, SpendWise turns daily expense tracking into an effortless and visually delightful experience.
 
 ---
 
-## ✨ Key Features
+## ✨ Features (For Website Showcase)
 
-### 📸 Full-Screen AI Bill & Receipt Scanner
-- **Edge-to-Edge Camera View**: Snap bills and receipts up-close with an edge-to-edge camera surface.
-- **Smart OCR Extraction**: Instantly parse merchant names, dates, payment methods, and total amounts.
-- **Verification & Quick-Edit**: Effortlessly verify and refine scanned details before committing transactions.
-- **Built-in Flash / Torch Toggle & Gallery Picker**: Capture in low-light environments or upload receipts directly from your photo library.
+### 🔐 1. Authentication & Privacy-First Guest Mode
+- **Google Sign-In**: Secure 1-tap login with Google. Automatically syncs your Google profile picture and name to personalize the dashboard.
+- **Offline Guest Mode**: Privacy-first approach! Users can choose "Continue as Guest" to use the app entirely offline with no account required.
+- **Session Management**: Persistent sessions managed securely via Android DataStore.
 
-### 💰 Dashboard & Financial Summary
+### 💰 2. Smart Dashboard & Analytics
 - **Live Net Balance, Inflow & Outflow**: Real-time totals computed dynamically from your local financial records.
-- **Quick Action Triggers**: Instant one-tap access for adding income, logging expenses, or scanning physical receipts.
-- **Recent Transactions Timeline**: View recent spending activities with custom category avatars and status badges.
+- **Privacy Toggle**: A discrete "Eye" icon to hide your total balance from prying eyes (displays as ••••••).
+- **Recent Transactions Timeline**: View recent spending activities with custom category avatars, color-coded badges, and native horizontal slide animations.
 
-### 🗓️ All Activity & Monthly Ledger
-- **Clean Chronological Timeline**: Organized neatly by month and year.
-- **Sticky Month Headers**: Smoothly pin to top during scrolling with concise monthly spending summaries.
-- **Interactive Detail Sheets**: Tap any item to view its complete ledger breakdown, payment method, category, and timestamps.
+### 📸 3. AI-Powered Receipt Scanner (Gemini Integration)
+- **Automated Expense Entry**: No more manual typing! Take a photo of a receipt, and the embedded AI automatically extracts the Title, Amount, Date, and infers the correct Category.
+- **OS Intent Integration ("Share to SpendWise")**: Seamlessly share receipt images from your phone's Gallery, WhatsApp, or any other app directly to SpendWise to instantly scan and log the expense.
 
-### 🔐 Secure Local Storage & Authentication
-- **On-Device Room Database**: Fast, reliable, and offline-first SQL database architecture.
-- **User Authentication**: Complete login, register, and session management flow with encrypted Datastore preferences.
+### 🗓️ 4. Comprehensive Transaction Management
+- **Detailed Tracking**: Log income and expenses with detailed fields: categories (Food, Transport, Bills, etc.), multiple payment methods (UPI, Card, Cash), timestamps, and optional notes.
+- **Clean Chronological Ledger**: See all transactions neatly grouped in a timeline.
+- **Interactive Detail Sheets**: Tap any item to view its complete ledger breakdown in a beautiful translucent bottom sheet, complete with directional badges (Money In/Money Out).
+- **Smart Validation**: The "Save" button intelligently color-codes itself (Green for Income, Red for Expense) and only enables when a valid amount is entered.
+
+### ☁️ 5. Cloud Sync & Local Persistence
+- **On-Device SQLite (Room DB)**: Fast, reliable, offline-first data architecture. The app runs instantaneously without internet.
+- **Auto Google Drive Backup**: Transactions are silently backed up to your personal Google Drive in the background. If you reinstall or change devices, your data restores instantly upon signing back in!
+- **Smart Fallback**: Cloud sync intelligently disables itself when in Guest Mode to preserve privacy.
+
+### 🎨 6. Premium UI & Adaptive Design
+- **Material Design 3 & Glassmorphism**: Stunning UI featuring translucent frosted-glass navigation bars and floating elements.
+- **Adaptive Dark & Light Mode**: The UI automatically shifts between a clean white aesthetic and a deep charcoal dark mode, dynamically adjusting gradients and text contrast for perfect readability in any lighting.
+- **Smooth Native Animations**: Fluid sliding page transitions and responsive button ripples that feel at home on modern Android.
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
-
 - **Language**: Kotlin 100%
 - **UI Framework**: Jetpack Compose (Material 3 with custom Glassmorphism/Dark Slate theme)
 - **Local Persistence**: Room Database (SQLite) + Jetpack DataStore Preferences
-- **Camera & Image Processing**: CameraX (Full-screen preview + latency minimization capture) + ML Kit / Gemini OCR Engine
-- **Image Loading**: Coil Compose
-- **Architecture Pattern**: MVVM (Model-View-ViewModel) + Clean Architecture Repository pattern
+- **Cloud/Backend**: Google Drive API for silent app-data backup.
+- **AI/ML**: Gemini API Engine for intelligent OCR extraction.
+- **Architecture Pattern**: MVVM (Model-View-ViewModel) + Clean Architecture Repository pattern.
+- **Concurrency**: Kotlin Coroutines & Flow.
 
 ---
-
-## 📲 How to Install
-
-1. Click on the **[Download App APK](https://drive.usercontent.google.com/download?id=1PqOn_OHr2O9anTuUDM2Lkow3bGtY8yjN&export=download&confirm=t)** button above.
-2. Once the file finishes downloading, tap to open the `.apk` package.
-3. If prompted by Android, enable **"Install from unknown sources"** for your browser.
-4. Open **SpendWise** and enjoy tracking your finances!
-
----
-
 <div align="center">
-
-Created by Rutvik with love and AI ❤️✨
-
 Crafted for modern Android devices.
-
 </div>

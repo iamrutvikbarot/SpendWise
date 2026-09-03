@@ -33,6 +33,7 @@ import com.example.ui.theme.SpendWiseTheme
 import com.example.ui.transactions.AddTransactionScreen
 import com.example.ui.transactions.TransactionViewModel
 import com.example.ui.transactions.TransactionsListScreen
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +51,18 @@ class MainActivity : ComponentActivity() {
         val dataStoreManager = DataStoreManager(this)
         val driveBackupManager = com.example.data.remote.DriveBackupManager(this, transactionRepository, budgetRepository)
 
+        // If the app was closed and restarted, wipe guest session if any
+        lifecycleScope.launch {
+            val userId = dataStoreManager.userId.firstOrNull()
+            if (userId != null) {
+                val user = userRepository.getUserByIdFlow(userId).firstOrNull()
+                if (user?.email == "guest@spendwise.app") {
+                    dataStoreManager.clearLoginState()
+                    transactionRepository.deleteTransactionsForUser(userId)
+                }
+            }
+        }
+
         val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return when {
@@ -62,7 +75,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            SpendWiseTheme {
+            val themeMode by dataStoreManager.themeMode.collectAsState(initial = "system")
+            val darkTheme = when (themeMode) {
+                "light" -> false
+                "dark" -> true
+                else -> androidx.compose.foundation.isSystemInDarkTheme()
+            }
+            
+            SpendWiseTheme(darkTheme = darkTheme) {
                 val navController = rememberNavController()
                 val isLoggedIn by dataStoreManager.isLoggedIn.collectAsState(initial = null)
                 val sharedImageUri by _sharedImageUri.collectAsState()
@@ -84,15 +104,17 @@ class MainActivity : ComponentActivity() {
                 ) { isSplash ->
                     if (isSplash) {
                         SplashScreen(
+                            isDarkTheme = darkTheme,
                             onAnimationComplete = {
                                 showSplash = false
                             }
                         )
                     } else {
+                        val startDestination = remember { if (isLoggedIn == true) "home" else "login" }
                         Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
                             NavHost(
                                 navController = navController,
-                                startDestination = if (isLoggedIn == true) "home" else "login"
+                                startDestination = startDestination
                             ) {
                             composable(
                                 route = "login",
@@ -247,17 +269,21 @@ fun MainTabScaffold(
 ) {
     val homeViewModel: HomeViewModel = viewModel(factory = factory)
     var selectedTab by remember { mutableStateOf("home") }
+    val userPhotoUrl by dataStoreManager.userPhotoUrl.collectAsState(initial = null)
 
     Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
-        // Content Area with smooth fade & scale transition
+        // Content Area with smooth slide transition
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = {
-                (fadeIn(animationSpec = tween(220, easing = FastOutSlowInEasing)) + 
-                 scaleIn(initialScale = 0.97f, animationSpec = tween(220, easing = FastOutSlowInEasing)))
-                    .togetherWith(
-                        fadeOut(animationSpec = tween(160, easing = FastOutSlowInEasing))
-                    )
+                val isGoingRight = targetState == "profile"
+                slideInHorizontally(
+                    animationSpec = tween(300, easing = FastOutSlowInEasing),
+                    initialOffsetX = { fullWidth -> if (isGoingRight) fullWidth else -fullWidth }
+                ) togetherWith slideOutHorizontally(
+                    animationSpec = tween(300, easing = FastOutSlowInEasing),
+                    targetOffsetX = { fullWidth -> if (isGoingRight) -fullWidth else fullWidth }
+                )
             },
             label = "tab_content_transition"
         ) { targetTab ->
@@ -291,7 +317,8 @@ fun MainTabScaffold(
             FrostedBottomBar(
                 currentRoute = selectedTab,
                 onNavigate = { selectedTab = it },
-                onQuickAdd = onNavigateToAddTransaction
+                onQuickAdd = onNavigateToAddTransaction,
+                userPhotoUrl = userPhotoUrl
             )
         }
     }

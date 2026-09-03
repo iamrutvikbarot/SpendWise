@@ -66,6 +66,19 @@ val CatGiftBg = Color(0xFFFEE2E2)
 val CatOthers = Color(0xFF6B7280)
 val CatOthersBg = Color(0xFFF3F4F6)
 
+// Dark Theme Colors
+val BackgroundDark = Color(0xFF0F172A)
+val SurfaceDark = Color(0xFF1E293B)
+val TextPrimaryDark = Color(0xFFF8FAFC)
+val TextSecondaryDark = Color(0xFF94A3B8)
+val TextTertiaryDark = Color(0xFF64748B)
+val DividerColorDark = Color(0xFF334155)
+
+// Splash screen light background colors
+val SplashLightTop = Color(0xFFE6F7F5)
+val SplashLightBottom = Color(0xFFFFFFFF)
+val SplashLightWaveColor = Color(0xFFD1EBE9)
+
 // Splash screen dark background colors
 val SplashDarkTop = Color(0xFF0B192C)
 val SplashDarkBottom = Color(0xFF07101C)

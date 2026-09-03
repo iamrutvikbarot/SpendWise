@@ -35,6 +35,7 @@ class AuthViewModel(
             try {
                 val email = account.email ?: ""
                 val fullName = account.displayName ?: "User"
+                val photoUrl = account.photoUrl?.toString()
                 
                 if (email.isBlank()) {
                     _authState.value = AuthState.Error("Email is required from Google account")
@@ -68,7 +69,7 @@ class AuthViewModel(
                     }
                 }
 
-                dataStoreManager.saveLoginState(true, user.id)
+                dataStoreManager.saveLoginState(true, user.id, photoUrl)
                 _authState.value = AuthState.Success(user)
             } catch (e: Exception) {
                 _authState.value = AuthState.Error(e.message ?: "Login failed")
@@ -80,8 +81,8 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             try {
-                val email = "test@example.com"
-                val fullName = "Test User"
+                val email = "guest@spendwise.app"
+                val fullName = "Guest User"
                 
                 var user = userRepository.getUserByEmail(email)
                 
@@ -89,16 +90,19 @@ class AuthViewModel(
                     val newUser = User(
                         fullName = fullName,
                         email = email,
-                        pinHash = "TEST_MODE"
+                        pinHash = "GUEST_MODE"
                     )
                     val userId = userRepository.insertUser(newUser).toInt()
                     user = newUser.copy(id = userId)
                 }
                 
-                dataStoreManager.saveLoginState(true, user.id)
+                // Clear any existing transactions for the guest session
+                transactionRepository.deleteTransactionsForUser(user.id)
+                
+                dataStoreManager.saveLoginState(true, user.id, null)
                 _authState.value = AuthState.Success(user)
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Test Mode Login failed")
+                _authState.value = AuthState.Error(e.message ?: "Guest Login failed")
             }
         }
     }

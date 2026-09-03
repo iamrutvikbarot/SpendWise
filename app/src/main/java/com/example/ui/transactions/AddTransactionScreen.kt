@@ -19,13 +19,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CallMade
 import androidx.compose.material.icons.filled.CallReceived
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,15 +95,24 @@ fun AddTransactionScreen(
 
     val payments = listOf("UPI", "Debit Card", "Credit Card", "Cash", "Net Banking")
 
+    var showSuccessAnim by remember { mutableStateOf(false) }
+
+    LaunchedEffect(showSuccessAnim) {
+        if (showSuccessAnim) {
+            kotlinx.coroutines.delay(1200)
+            onNavigateBack()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        Background,
-                        Background,
-                        Background
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.background
                     )
                 )
             )
@@ -123,25 +135,51 @@ fun AddTransactionScreen(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                         .clickable(onClick = onNavigateBack),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back",
-                        tint = TextPrimary,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(18.dp)
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "New Transaction",
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
+                
+                val isValid = (amount.toDoubleOrNull() ?: 0.0) > 0
+                Button(
+                    onClick = {
+                        val amountVal = amount.toDoubleOrNull() ?: 0.0
+                        val finalTitle = title.ifBlank { selectedCategory }
+                        viewModel.addTransaction(
+                            amount = amountVal,
+                            title = finalTitle,
+                            isExpense = isExpense,
+                            category = selectedCategory,
+                            paymentMethod = selectedPayment,
+                            onComplete = { showSuccessAnim = true }
+                        )
+                    },
+                    enabled = isValid,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isExpense) ExpenseRed else IncomeGreen,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    modifier = Modifier.height(36.dp)
+                ) {
+                    Text("Save", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -158,8 +196,8 @@ fun AddTransactionScreen(
                         .fillMaxWidth()
                         .height(60.dp)
                         .clip(RoundedCornerShape(18.dp))
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, RoundedCornerShape(18.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
                         .padding(4.dp)
                 ) {
                     Row(modifier = Modifier.fillMaxSize()) {
@@ -191,13 +229,13 @@ fun AddTransactionScreen(
                                     modifier = Modifier
                                         .size(28.dp)
                                         .clip(CircleShape)
-                                        .background(if (isExpense) ExpenseRed.copy(alpha = 0.25f) else Color.White),
+                                        .background(if (isExpense) ExpenseRed.copy(alpha = 0.25f) else MaterialTheme.colorScheme.surface),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.CallMade, // Outgoing Money Out ↗
                                         contentDescription = "Expense Out",
-                                        tint = if (isExpense) ExpenseRed else TextSecondary,
+                                        tint = if (isExpense) ExpenseRed else MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(15.dp)
                                     )
                                 }
@@ -205,7 +243,7 @@ fun AddTransactionScreen(
                                 Column {
                                     Text(
                                         text = "Expense",
-                                        color = if (isExpense) ExpenseRed else TextSecondary,
+                                        color = if (isExpense) ExpenseRed else MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp
                                     )
@@ -247,13 +285,13 @@ fun AddTransactionScreen(
                                     modifier = Modifier
                                         .size(28.dp)
                                         .clip(CircleShape)
-                                        .background(if (!isExpense) IncomeGreen.copy(alpha = 0.25f) else Color.White),
+                                        .background(if (!isExpense) IncomeGreen.copy(alpha = 0.25f) else MaterialTheme.colorScheme.surface),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.CallReceived, // Incoming Money In ↙
                                         contentDescription = "Income In",
-                                        tint = if (!isExpense) IncomeGreen else TextSecondary,
+                                        tint = if (!isExpense) IncomeGreen else MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(15.dp)
                                     )
                                 }
@@ -261,7 +299,7 @@ fun AddTransactionScreen(
                                 Column {
                                     Text(
                                         text = "Income",
-                                        color = if (!isExpense) IncomeGreen else TextSecondary,
+                                        color = if (!isExpense) IncomeGreen else MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp
                                     )
@@ -282,8 +320,8 @@ fun AddTransactionScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(20.dp))
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
                         .padding(18.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -309,37 +347,36 @@ fun AddTransactionScreen(
                                 color = if (isExpense) ExpenseRed else IncomeGreen
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            TextField(
+                            BasicTextField(
                                 value = amount,
                                 onValueChange = { input ->
                                     if (input.all { it.isDigit() || it == '.' }) {
                                         amount = input
                                     }
                                 },
-                                placeholder = {
-                                    Text(
-                                        text = "0",
-                                        color = TextTertiary,
-                                        fontSize = 34.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                },
                                 textStyle = LocalTextStyle.current.copy(
-                                    color = TextPrimary,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 34.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Start
                                 ),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                 singleLine = true,
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.Transparent,
-                                    unfocusedContainerColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    cursorColor = if (isExpense) ExpenseRed else IncomeGreen
-                                ),
-                                modifier = Modifier.widthIn(min = 60.dp, max = 220.dp)
+                                cursorBrush = SolidColor(if (isExpense) ExpenseRed else IncomeGreen),
+                                modifier = Modifier.width(IntrinsicSize.Min).defaultMinSize(minWidth = 30.dp),
+                                decorationBox = { innerTextField ->
+                                    Box(contentAlignment = Alignment.CenterStart) {
+                                        if (amount.isEmpty()) {
+                                            Text(
+                                                text = "0",
+                                                color = TextTertiary,
+                                                fontSize = 34.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        innerTextField()
+                                    }
+                                }
                             )
                         }
                     }
@@ -362,7 +399,7 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = if (isExpense) "Expense Category" else "Income Category",
-                            color = TextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -402,10 +439,10 @@ fun AddTransactionScreen(
                                                 .weight(1f)
                                                 .scale(itemScale)
                                                 .clip(RoundedCornerShape(14.dp))
-                                                .background(if (isSelected) cat.color.copy(alpha = 0.22f) else Color.White)
+                                                .background(if (isSelected) cat.color.copy(alpha = 0.22f) else MaterialTheme.colorScheme.surface)
                                                 .border(
                                                     1.dp,
-                                                    if (isSelected) cat.color else DividerColor,
+                                                    if (isSelected) cat.color else MaterialTheme.colorScheme.outline,
                                                     RoundedCornerShape(14.dp)
                                                 )
                                                 .clickable(
@@ -425,7 +462,7 @@ fun AddTransactionScreen(
                                                     text = cat.name,
                                                     fontSize = 10.5.sp,
                                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                    color = if (isSelected) TextPrimary else TextSecondary,
+                                                    color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                                                     maxLines = 1
                                                 )
                                             }
@@ -441,7 +478,7 @@ fun AddTransactionScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
                         text = if (isExpense) "Payment Method" else "Deposit Destination / Method",
-                        color = TextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -455,10 +492,10 @@ fun AddTransactionScreen(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else Color.White)
+                                    .background(if (isSelected) PrimaryTeal.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surface)
                                     .border(
                                         1.dp,
-                                        if (isSelected) PrimaryTeal else DividerColor,
+                                        if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.outline,
                                         RoundedCornerShape(12.dp)
                                     )
                                     .clickable { selectedPayment = pay }
@@ -467,7 +504,7 @@ fun AddTransactionScreen(
                             ) {
                                 Text(
                                     text = pay,
-                                    color = if (isSelected) PrimaryTeal else TextSecondary,
+                                    color = if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.5.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -477,26 +514,29 @@ fun AddTransactionScreen(
                 }
 
                 Spacer(modifier = Modifier.height(6.dp))
+            }
+        }
 
-                // Save Action
-                val isValid = (amount.toDoubleOrNull() ?: 0.0) > 0
-                GradientButton(
-                    text = if (isExpense) "Save Expense Entry" else "Save Income Entry",
-                    onClick = {
-                        val amountVal = amount.toDoubleOrNull() ?: 0.0
-                        val finalTitle = title.ifBlank { selectedCategory }
-                        viewModel.addTransaction(
-                            amount = amountVal,
-                            title = finalTitle,
-                            isExpense = isExpense,
-                            category = selectedCategory,
-                            paymentMethod = selectedPayment,
-                            onComplete = onNavigateBack
-                        )
-                    },
-                    enabled = isValid,
-                    gradientColors = if (isExpense) listOf(ExpenseRed, Color(0xFFE11D48)) else listOf(PrimaryTeal, PrimaryTealDark)
-                )
+        // Success Animation Overlay
+        androidx.compose.animation.AnimatedVisibility(
+            visible = showSuccessAnim,
+            modifier = Modifier.align(Alignment.Center),
+            enter = fadeIn(tween(300)) + androidx.compose.animation.scaleIn(initialScale = 0.5f, animationSpec = spring(dampingRatio = 0.5f, stiffness = 200f)),
+            exit = fadeOut(tween(300)) + androidx.compose.animation.scaleOut(targetScale = 1.2f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(140.dp)
+                    .clip(RoundedCornerShape(32.dp))
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
+                    .border(2.dp, if (isExpense) ExpenseRed else IncomeGreen, RoundedCornerShape(32.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "✅", fontSize = 48.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Saved!", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                }
             }
         }
     }

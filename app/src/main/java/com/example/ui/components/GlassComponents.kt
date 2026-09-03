@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,7 @@ fun GlassTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label, color = TextSecondary, fontSize = 14.sp) },
+        label = { Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp) },
         placeholder = if (placeholder.isNotEmpty()) {
             { Text(placeholder, color = TextTertiary, fontSize = 14.sp) }
         } else null,
@@ -53,12 +54,12 @@ fun GlassTextField(
         singleLine = singleLine,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.White.copy(alpha = 0.8f),
-            unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
-            focusedTextColor = TextPrimary,
-            unfocusedTextColor = TextPrimary,
+            focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
             focusedBorderColor = PrimaryTeal,
-            unfocusedBorderColor = DividerColor,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
             cursorColor = PrimaryTeal
         ),
         shape = RoundedCornerShape(16.dp),
@@ -130,8 +131,8 @@ fun SecondaryGlassButton(
             .fillMaxWidth()
             .height(height)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.6f))
-            .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
@@ -145,7 +146,7 @@ fun SecondaryGlassButton(
             }
             Text(
                 text = text,
-                color = TextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 15.sp
             )

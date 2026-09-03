@@ -14,13 +14,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,7 +80,7 @@ fun HomeDashboard(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Main Scrollable Body
         Column(
@@ -110,7 +109,7 @@ fun HomeDashboard(
                     ) {
                         Text(
                             text = initials,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.surface,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp
                         )
@@ -121,42 +120,15 @@ fun HomeDashboard(
                             text = "$greeting, $firstName 👋",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = todayStr,
                             fontSize = 12.sp,
-                            color = TextSecondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(top = 2.dp)
                         )
                     }
-                }
-
-                // Notification Bell
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, CircleShape)
-                        .clickable { /* Handle Notifications */ },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = "Notifications",
-                        tint = PrimaryTeal,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    // Notification red dot badge
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(ExpenseRed)
-                            .align(Alignment.TopEnd)
-                            .offset(x = (-10).dp, y = 10.dp)
-                    )
                 }
             }
 
@@ -173,7 +145,7 @@ fun HomeDashboard(
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(24.dp), spotColor = Color(0x1A000000))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(24.dp)
                 ) {
                     Column {
@@ -187,32 +159,8 @@ fun HomeDashboard(
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 letterSpacing = 1.sp,
-                                color = TextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(SecondaryTeal)
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Check,
-                                        contentDescription = null,
-                                        tint = PrimaryTeal,
-                                        modifier = Modifier.size(12.dp)
-                                    )
-                                    Text(
-                                        text = "Live",
-                                        color = PrimaryTeal,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -224,7 +172,7 @@ fun HomeDashboard(
                                 text = balanceStr,
                                 fontSize = 36.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = TextPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Icon(
@@ -249,23 +197,13 @@ fun HomeDashboard(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White)
-                                    .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                                     .padding(12.dp)
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(36.dp)
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .background(IncomeGreen),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(text = "↗", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                                    }
-                                    Spacer(modifier = Modifier.width(10.dp))
                                     Column {
-                                        Text("Income", fontSize = 12.sp, color = TextSecondary)
+                                        Text("Income", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text(
                                             incomeStr,
                                             fontSize = 14.sp,
@@ -281,23 +219,13 @@ fun HomeDashboard(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White)
-                                    .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                                     .padding(12.dp)
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(36.dp)
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .background(ExpenseRed),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(text = "↘", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                                    }
-                                    Spacer(modifier = Modifier.width(10.dp))
                                     Column {
-                                        Text("Expense", fontSize = 12.sp, color = TextSecondary)
+                                        Text("Expense", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text(
                                             expenseStr,
                                             fontSize = 14.sp,
@@ -342,7 +270,7 @@ fun HomeDashboard(
                             ) {
                                 Text(text = "🧾", fontSize = 16.sp)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Scan Bill", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                                Text(text = "Scan Bill", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                             }
                         }
                     }
@@ -359,7 +287,7 @@ fun HomeDashboard(
                             text = "Recent Activity",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "See All →",
@@ -377,7 +305,7 @@ fun HomeDashboard(
                                 .fillMaxWidth()
                                 .shadow(elevation = 2.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0x0D000000))
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White)
+                                .background(MaterialTheme.colorScheme.surface)
                                 .padding(32.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -389,7 +317,7 @@ fun HomeDashboard(
                                     modifier = Modifier
                                         .size(64.dp)
                                         .clip(CircleShape)
-                                        .background(Background),
+                                        .background(MaterialTheme.colorScheme.background),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
@@ -401,13 +329,13 @@ fun HomeDashboard(
                                 }
                                 Text(
                                     text = "No Transactions Logged Yet",
-                                    color = TextPrimary,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 16.sp
                                 )
                                 Text(
                                     text = "Add your first expense or scan a receipt\nto start tracking.",
-                                    color = TextSecondary,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 13.sp,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                     lineHeight = 18.sp
@@ -543,7 +471,7 @@ fun ModernTransactionCard(
             .scale(cardScale)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp), spotColor = Color(0x0A000000))
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -577,7 +505,7 @@ fun ModernTransactionCard(
                     text = cleanTitle,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
@@ -614,14 +542,14 @@ fun ModernTransactionCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
-                        .background(Background)
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Text(
                         text = cleanPayment,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )

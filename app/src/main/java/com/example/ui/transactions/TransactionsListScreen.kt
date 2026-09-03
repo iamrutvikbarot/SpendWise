@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +62,7 @@ fun TransactionsListScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -90,8 +91,8 @@ fun TransactionsListScreen(
                         .size(40.dp)
                         .scale(backScale)
                         .clip(CircleShape)
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                         .clickable(
                             interactionSource = backInteraction,
                             indication = null,
@@ -102,7 +103,7 @@ fun TransactionsListScreen(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back",
-                        tint = TextPrimary,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -112,13 +113,13 @@ fun TransactionsListScreen(
                 Column {
                     Text(
                         text = "All Activity",
-                        color = TextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "${transactions.size} transactions recorded",
-                        color = TextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.5.sp
                     )
                 }
@@ -141,13 +142,13 @@ fun TransactionsListScreen(
                         Text(text = "📜", fontSize = 36.sp)
                         Text(
                             text = "No Activity Yet",
-                            color = TextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = "Your income and expense logs will appear here.",
-                            color = TextSecondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 13.sp
                         )
                     }
@@ -175,15 +176,15 @@ fun TransactionsListScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(Background)
+                                    .background(MaterialTheme.colorScheme.background)
                                     .padding(vertical = 8.dp)
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(12.dp))
-                                        .background(Color.White)
-                                        .border(1.dp, DividerColor.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.colorScheme.surface)
+                                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                                         .padding(horizontal = 14.dp, vertical = 9.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
@@ -195,14 +196,14 @@ fun TransactionsListScreen(
                                     ) {
                                         Text(
                                             text = monthName,
-                                            color = TextPrimary,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontSize = 14.5.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                         if (yearName.isNotEmpty()) {
                                             Text(
                                                 text = yearName,
-                                                color = TextSecondary,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 fontSize = 13.sp,
                                                 fontWeight = FontWeight.Medium
                                             )
@@ -213,14 +214,14 @@ fun TransactionsListScreen(
                                     if (monthTotalSpent > 0) {
                                         Text(
                                             text = "Spent ${currencyFormat.format(monthTotalSpent)}",
-                                            color = TextSecondary,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Medium
                                         )
                                     } else {
                                         Text(
                                             text = "${monthTransactions.size} items",
-                                            color = TextSecondary,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontSize = 12.sp
                                         )
                                     }
@@ -272,8 +273,8 @@ fun TransactionsListScreen(
                                     .fillMaxWidth()
                                     .scale(itemScale)
                                     .clip(RoundedCornerShape(14.dp))
-                                    .background(Color.White)
-                                    .border(1.dp, DividerColor.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
                                     .clickable(
                                         interactionSource = interactionSource,
                                         indication = null,
@@ -297,7 +298,7 @@ fun TransactionsListScreen(
                                             modifier = Modifier
                                                 .size(42.dp)
                                                 .clip(CircleShape)
-                                                .background(Color.White),
+                                                .background(MaterialTheme.colorScheme.surface),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(text = icon, fontSize = 20.sp)
@@ -306,7 +307,7 @@ fun TransactionsListScreen(
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
                                                 text = tx.title.ifBlank { tx.category },
-                                                color = TextPrimary,
+                                                color = MaterialTheme.colorScheme.onSurface,
                                                 fontSize = 14.5.sp,
                                                 fontWeight = FontWeight.SemiBold,
                                                 maxLines = 1,

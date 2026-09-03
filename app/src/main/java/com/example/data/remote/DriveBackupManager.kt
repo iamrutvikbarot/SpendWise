@@ -166,7 +166,7 @@ class DriveBackupManager(
         return if (account != null) {
             backupData(account, userId)
         } else {
-            Log.e(TAG, "No Google account signed in for backup")
+            Log.d(TAG, "Skipping Drive Backup: No Google account signed in (likely Guest mode)")
             false
         }
     }

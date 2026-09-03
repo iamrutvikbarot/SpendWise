@@ -11,10 +11,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,66 +44,80 @@ fun ProfileScreen(
     onLogout: () -> Unit
 ) {
     val user by viewModel.user.collectAsState()
+    val userPhotoUrl by viewModel.userPhotoUrl.collectAsState()
     val transactions by viewModel.transactions.collectAsState()
     val income by viewModel.totalIncome.collectAsState()
     val expense by viewModel.totalExpense.collectAsState()
     val balance by viewModel.totalBalance.collectAsState()
+    val themeMode by viewModel.themeMode.collectAsState()
 
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showStats by remember { mutableStateOf(false) }
 
     val format = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
     val initials = user?.fullName?.split(" ")?.mapNotNull { it.firstOrNull()?.uppercase() }?.joinToString("")?.take(2)?.ifBlank { "U" } ?: "U"
 
     if (showLogoutDialog) {
-        AlertDialog(
+        androidx.compose.ui.window.Dialog(
             onDismissRequest = { showLogoutDialog = false },
-            title = {
-                Text(
-                    text = "Sign Out",
-                    color = TextPrimary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-            },
-            text = {
-                Text(
-                    text = "Are you sure you want to sign out of your SpendWise account?",
-                    color = TextSecondary,
-                    fontSize = 14.sp
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showLogoutDialog = false
-                    onLogout()
-                }) {
-                    Text("Sign Out", color = ExpenseRed, fontWeight = FontWeight.Bold)
+            properties = androidx.compose.ui.window.DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 8.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Sign Out",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        Text(
+                            text = "Are you sure you want to sign out of your SpendWise account?",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 15.sp,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            modifier = Modifier.padding(bottom = 24.dp)
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            TextButton(onClick = { showLogoutDialog = false }) {
+                                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            TextButton(onClick = {
+                                showLogoutDialog = false
+                                onLogout()
+                            }) {
+                                Text("Sign Out", color = ExpenseRed, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
                 }
-            },
-            dismissButton = {
-                TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Cancel", color = TextSecondary)
-                }
-            },
-            containerColor = Color.White,
-            shape = RoundedCornerShape(20.dp),
-            titleContentColor = TextPrimary,
-            textContentColor = TextSecondary
-        )
+            }
+        }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        Background,
-                        Background,
-                        Background
-                    )
-                )
-            )
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -119,7 +135,7 @@ fun ProfileScreen(
             ) {
                 Text(
                     text = "My Profile",
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -140,8 +156,8 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .shadow(elevation = 12.dp, shape = RoundedCornerShape(24.dp), spotColor = Color(0xFF000000))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(Color.White)
-                        .border(1.dp, DividerColor, RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
                         .padding(24.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -153,18 +169,27 @@ fun ProfileScreen(
                                 .clip(CircleShape)
                                 .background(
                                     Brush.linearGradient(
-                                        listOf(PrimaryTeal, PrimaryTeal)
+                                        listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary)
                                     )
                                 )
-                                .border(2.dp, DividerColor, CircleShape),
+                                .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = initials,
-                                color = Color(0xFF090D16),
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 30.sp
-                            )
+                            if (userPhotoUrl != null) {
+                                coil.compose.AsyncImage(
+                                    model = userPhotoUrl,
+                                    contentDescription = "Profile Photo",
+                                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize().clip(CircleShape)
+                                )
+                            } else {
+                                Text(
+                                    text = initials,
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 30.sp
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(14.dp))
@@ -173,7 +198,7 @@ fun ProfileScreen(
                             text = user?.fullName ?: "User",
                             fontSize = 19.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         Spacer(modifier = Modifier.height(3.dp))
@@ -181,141 +206,222 @@ fun ProfileScreen(
                         Text(
                             text = user?.email ?: "user@example.com",
                             fontSize = 13.sp,
-                            color = TextSecondary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(PrimaryTeal.copy(alpha = 0.15f))
-                                .padding(horizontal = 12.dp, vertical = 5.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Text(text = "🔐", fontSize = 11.sp)
-                                Text(
-                                    text = "Secure Local Vault",
-                                    color = PrimaryTeal,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
                     }
                 }
 
-                // Financial Overview Stats Grid
+                // Settings Menu
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
+                        .padding(8.dp)
                 ) {
-                    Text(
-                        text = "Account Statistics",
-                        color = TextPrimary,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        // Total Transactions
-                        Box(
+                    // Theme Selector Option
+                    var expandedThemeMenu by remember { mutableStateOf(false) }
+                    Column {
+                        Row(
                             modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
-                                .padding(16.dp)
+                                .clickable { expandedThemeMenu = !expandedThemeMenu }
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(text = "🧾", fontSize = 20.sp)
-                                Text("Total Entries", fontSize = 11.sp, color = TextSecondary)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "🎨", fontSize = 20.sp, modifier = Modifier.padding(end = 12.dp))
+                                Text("App Theme", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    "${transactions.size}",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = TextPrimary
+                                    text = themeMode.replaceFirstChar { it.uppercase() },
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontSize = 14.sp
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Icon(
+                                    imageVector = if (expandedThemeMenu) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                                    contentDescription = "Toggle Theme",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
-
-                        // Net Balance
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
-                                .padding(16.dp)
-                        ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(text = "💎", fontSize = 20.sp)
-                                Text("Net Balance", fontSize = 11.sp, color = TextSecondary)
-                                Text(
-                                    format.format(balance),
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (balance >= 0) PrimaryTeal else ExpenseRed,
-                                    maxLines = 1,
-                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                                )
+                        
+                        androidx.compose.animation.AnimatedVisibility(visible = expandedThemeMenu) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                            ) {
+                                listOf("light", "dark", "system").forEach { mode ->
+                                    val isSelected = themeMode == mode
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .clickable { 
+                                                viewModel.setThemeMode(mode)
+                                                expandedThemeMenu = false 
+                                            }
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            text = mode.replaceFirstChar { it.uppercase() },
+                                            color = if (isSelected) PrimaryTeal else MaterialTheme.colorScheme.onSurface,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                            fontSize = 15.sp
+                                        )
+                                        if (isSelected) {
+                                            Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = "Selected",
+                                                tint = PrimaryTeal,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-
+                    
+                    Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), modifier = Modifier.padding(horizontal = 16.dp))
+                    
+                    // Account Statistics Toggle
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable { showStats = !showStats }
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Total Income
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
-                                .padding(16.dp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "📊", fontSize = 20.sp, modifier = Modifier.padding(end = 12.dp))
+                            Text("Account Statistics", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        }
+                        Icon(
+                            imageVector = if (showStats) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                            contentDescription = "Toggle Stats",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                // Financial Overview Stats Grid (Hidden by default)
+                androidx.compose.animation.AnimatedVisibility(visible = showStats) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(text = "📈", fontSize = 20.sp)
-                                Text("Total Inflow", fontSize = 11.sp, color = TextSecondary)
-                                Text(
-                                    format.format(income),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = IncomeGreen,
-                                    maxLines = 1,
-                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                                )
+                            // Total Transactions
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                                    .padding(16.dp)
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(text = "🧾", fontSize = 20.sp)
+                                    Text("Total Entries", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(
+                                        "${transactions.size}",
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+    
+                            // Net Balance
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                                    .padding(16.dp)
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(text = "💎", fontSize = 20.sp)
+                                    Text("Net Balance", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(
+                                        format.format(balance),
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (balance >= 0) PrimaryTeal else ExpenseRed,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                }
                             }
                         }
-
-                        // Total Expense
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.White)
-                                .border(1.dp, DividerColor, RoundedCornerShape(16.dp))
-                                .padding(16.dp)
+    
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(text = "📉", fontSize = 20.sp)
-                                Text("Total Outflow", fontSize = 11.sp, color = TextSecondary)
-                                Text(
-                                    format.format(expense),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ExpenseRed,
-                                    maxLines = 1,
-                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                                )
+                            // Total Income
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                                    .padding(16.dp)
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(text = "📈", fontSize = 20.sp)
+                                    Text("Total Inflow", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(
+                                        format.format(income),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = IncomeGreen,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+    
+                            // Total Expense
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                                    .padding(16.dp)
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(text = "📉", fontSize = 20.sp)
+                                    Text("Total Outflow", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(
+                                        format.format(expense),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = ExpenseRed,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                }
                             }
                         }
                     }
@@ -323,14 +429,16 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Sign Out Button
-                SecondaryGlassButton(
-                    text = "Sign Out",
-                    onClick = { showLogoutDialog = true },
-                    icon = {
-                        Text(text = "🚪", fontSize = 16.sp)
-                    }
-                )
+                // Sign Out Button (Hidden for Guests)
+                if (user?.email != "guest@spendwise.app") {
+                    SecondaryGlassButton(
+                        text = "Sign Out",
+                        onClick = { showLogoutDialog = true },
+                        icon = {
+                            Text(text = "🚪", fontSize = 16.sp)
+                        }
+                    )
+                }
             }
         }
     }
