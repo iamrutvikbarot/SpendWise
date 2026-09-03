@@ -14,6 +14,14 @@
 
 ---
 
+## 📥 Download App
+
+[![Download APK](https://img.shields.io/badge/Download_APK-v2.0.0-10B981?style=for-the-badge&logo=android&logoColor=white)](https://github.com/iamrutvikbarot/SpendWise/releases/download/v2.0.0/SpendWise.apk)
+
+[Click here to download the latest SpendWise APK](https://github.com/iamrutvikbarot/SpendWise/releases/download/v2.0.0/SpendWise.apk) directly to your Android device.
+
+---
+
 ## ✨ Features (For Website Showcase)
 
 ### 🔐 1. Authentication & Privacy-First Guest Mode
@@ -59,5 +67,6 @@
 
 ---
 <div align="center">
-Crafted for modern Android devices.
+Crafted for modern Android devices.<br><br>
+<b>Created By RUTVIK WITH ❤️</b>
 </div>
